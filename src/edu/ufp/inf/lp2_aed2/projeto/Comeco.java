@@ -5,12 +5,12 @@ import edu.princeton.cs.algs4.*;
 import java.io.*;
 import java.util.Scanner;
 
-public class main {
-    public static void main(String[] args) {
+public class Comeco {
+    public static void comeco_main(String[] args) {
         // Start
         // sizes = n_user, n_reg, n_geo,n_itens, n_tv, n_lig, n_visitado, n_histTB;
         int[] sizes = new int[8];
-        for(int i = 0; i < 8; i++) sizes[i] = 0;
+        for (int i = 0; i < 8; i++) sizes[i] = 0;
 
         SequentialSearchST<Integer, User> user_st = new SequentialSearchST<>();
         SequentialSearchST<Integer, Geocache> geo_st = new SequentialSearchST<>();
@@ -64,7 +64,7 @@ public class main {
                     geo.coordenadasX = Float.parseFloat(data1[2]);
                     geo.coordenadasY = Float.parseFloat(data1[3]);
                     geo.n_itens = Integer.parseInt(data1[4]);
-                    geo.id_reg = i+1;
+                    geo.id_reg = i + 1;
 
                     // Leitura dos itens
                     for (int k = 1; k <= geo.n_itens; k++) {
@@ -72,12 +72,12 @@ public class main {
 
                         item.item = data1[4 + k];
                         item.id_geo = geo.id;
-                        item_st.put(sizes[3]+1, item);
+                        item_st.put(sizes[3] + 1, item);
                         sizes[3]++;
                     }
                     geo_st.put(idgeo, geo);
                 }
-                reg_st.put(i+1, reg);
+                reg_st.put(i + 1, reg);
             }
 
             // Leitura das ligacoes
@@ -93,7 +93,7 @@ public class main {
                 l.distancia = Float.parseFloat(data[2]);
                 l.tempo = Integer.parseInt(data[3]);
 
-                lig_st.put(i+1, l);
+                lig_st.put(i + 1, l);
             }
 
             // Leitura das travelBugs
@@ -109,7 +109,7 @@ public class main {
                 tb.geo_inicial = data[2];
                 tb.geo_destino = data[3];
 
-                tvb_st.put(i+1, tb);
+                tvb_st.put(i + 1, tb);
             }
 
             // Leitura do Historico de visitas
@@ -126,7 +126,7 @@ public class main {
                 histV.date = new Date[histV.n_visited];
 
                 for (int y = 0; y < histV.n_visited; y++) {
-                    histV.visited[y] = Integer.parseInt(data[y+2]);
+                    histV.visited[y] = Integer.parseInt(data[y + 2]);
                 }
 
                 // Data
@@ -136,22 +136,22 @@ public class main {
                     histV.date[y] = new Date(Integer.parseInt(aux[0]), Integer.parseInt(aux[1]), Integer.parseInt(aux[2]));
                     //System.out.println(y + "   " + hist.date[y]);
                 }
-                hisV_st.put(i,histV);
+                hisV_st.put(i, histV);
             }
 
 
-                // Leitura do historico de TB
-                sizes[7] = scan.nextInt();
-                scan.nextLine();
-                for(int z = 1; z <= sizes[7]; z++){
-                    HistoricoTB histTB = new HistoricoTB();
-                    String[] data2 = scan.nextLine().split(", ");
-                    histTB.user = data2[0];
-                    histTB.id_tb = Integer.parseInt(data2[1]);
-                    histTB.tb_start = Integer.parseInt(data2[2]);
-                    histTB.tb_end = Integer.parseInt(data2[3]);
-                    hisTB_st.put(z, histTB);
-                }
+            // Leitura do historico de TB
+            sizes[7] = scan.nextInt();
+            scan.nextLine();
+            for (int z = 1; z <= sizes[7]; z++) {
+                HistoricoTB histTB = new HistoricoTB();
+                String[] data2 = scan.nextLine().split(", ");
+                histTB.user = data2[0];
+                histTB.id_tb = Integer.parseInt(data2[1]);
+                histTB.tb_start = Integer.parseInt(data2[2]);
+                histTB.tb_end = Integer.parseInt(data2[3]);
+                hisTB_st.put(z, histTB);
+            }
 
 
         } catch (FileNotFoundException erro) {
@@ -161,9 +161,9 @@ public class main {
 
         // TESTES - INSERIR, REMOVER E EDITAR
         // USERS
-        User user = new User();
+        /*User user = new User();
         user.removeUser(1, sizes, user_st);
-        /*user.addUser(1, "Patricia", "admin", sizes, user_st);
+        user.addUser(1, "Patricia", "admin", sizes, user_st);
         user.addUser(8, "Patricia", "admin", sizes, user_st);
         user.removeUser(1, sizes, user_st);
         user.removeUser(1, sizes, user_st);
@@ -172,9 +172,9 @@ public class main {
         System.out.println();*/
 
         // REGIAO
-        Regiao regiao = new Regiao();
+        /*Regiao regiao = new Regiao();
         regiao.removeRegiao(1, sizes, reg_st, geo_st, item_st,hisV_st);
-        /*regiao.addRegiao(1, "TesteReg", sizes, reg_st);
+        regiao.addRegiao(1, "TesteReg", sizes, reg_st);
         regiao.addRegiao(4, "TesteReg", sizes, reg_st);
         regiao.removeRegiao(1, sizes, reg_st, geo_st, item_st,hisV_st);
         regiao.removeRegiao(1, sizes, reg_st, geo_st, item_st,hisV_st);
@@ -183,8 +183,8 @@ public class main {
         System.out.println();*/
 
         // GEOCACHE
-        Geocache geocache = new Geocache();
-        /*geocache.addGeocache("geocache1", "premium", -2.07543f, 43.87543f, 1, sizes, geo_st, reg_st);
+        /*Geocache geocache = new Geocache();
+        geocache.addGeocache("geocache1", "premium", -2.07543f, 43.87543f, 1, sizes, geo_st, reg_st);
         geocache.addGeocache("geocache19", "premium", -2.07543f, 43.87543f, 1, sizes, geo_st, reg_st);
         geocache.removeGeocache("geocache1", sizes, geo_st, reg_st, item_st,hisV_st);*/
         //geocache.removeGeocache("geocache1", sizes, geo_st, reg_st, item_st,hisV_st);
@@ -193,9 +193,9 @@ public class main {
         System.out.println();*/
 
         // ITEM
-        Item item = new Item();
-        //item.removeItem(1, sizes, item_st, geo_st);
-        /*item.addItem(1,"geocache1", "mp3", sizes, item_st, geo_st);
+        /*Item item = new Item();
+        item.removeItem(1, sizes, item_st, geo_st);
+        item.addItem(1,"geocache1", "mp3", sizes, item_st, geo_st);
         item.addItem(19,"geocache19", "mp3", sizes, item_st, geo_st);
         item.removeItem(1, sizes, item_st, geo_st);
         item.removeItem(1, sizes, item_st, geo_st);
@@ -204,9 +204,9 @@ public class main {
         System.out.println();*/
 
         // LIGACOES
-        Ligacoes ligacao = new Ligacoes();
+        /*Ligacoes ligacao = new Ligacoes();
         ligacao.removeLigacao("geocache1", "geocache2", sizes, lig_st);
-        /*ligacao.addLigacao("geocache1", "geocache2", 599.6f, 4573, sizes, lig_st);
+        ligacao.addLigacao("geocache1", "geocache2", 599.6f, 4573, sizes, lig_st);
         ligacao.addLigacao("geocache1", "geocache18", 599.6f, 4573, sizes, lig_st);
         ligacao.removeLigacao("geocache1", "geocache2", sizes, lig_st);
         ligacao.removeLigacao("geocache1", "geocache2", sizes, lig_st);
@@ -215,9 +215,9 @@ public class main {
         System.out.println();*/
 
         // TRAVELBUG
-        Travelbug travelbug = new Travelbug();
+        /*Travelbug travelbug = new Travelbug();
         travelbug.removeTravelBug(1, sizes, tvb_st);
-        /*travelbug.addTravelbug("travelbug1", "Pedro", "geocache12", "geocache13",sizes, tvb_st);
+        travelbug.addTravelbug("travelbug1", "Pedro", "geocache12", "geocache13",sizes, tvb_st);
         travelbug.removeTravelBug(1, sizes, tvb_st);*/
 
         // Listar tudo
@@ -237,7 +237,9 @@ public class main {
         //geocache.premiumWithItem(sizes, geo_st);
 
         // Save
-        output(sizes, user_st, reg_st, geo_st, item_st, lig_st, tvb_st, hisV_st, hisTB_st);
+        //output(sizes, user_st, reg_st, geo_st, item_st, lig_st, tvb_st, hisV_st, hisTB_st);
+
+        new CriacaoGrafo(sizes[2], geo_st);
     }
 
     /**
