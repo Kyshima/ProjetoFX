@@ -1,6 +1,7 @@
 package edu.ufp.inf.lp2_aed2.projeto;
 
 import edu.princeton.cs.algs4.*;
+import sample.Controller;
 
 import java.io.*;
 import java.util.Scanner;
@@ -239,6 +240,7 @@ public class Comeco {
         // Save
         //output(sizes, user_st, reg_st, geo_st, item_st, lig_st, tvb_st, hisV_st, hisTB_st);
 
+        //c.startController(sizes[2], geo_st);
     }
 
     /**

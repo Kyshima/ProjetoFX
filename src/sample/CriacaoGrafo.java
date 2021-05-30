@@ -50,11 +50,11 @@ public class CriacaoGrafo extends Graph {
                 x = (long) (geo.get(a + 1).coordenadasX * pow(10, 7));
                 y = (long) (geo.get(a + 1).coordenadasY * pow(10, 7));
 
-                x = (long) (x - (37 * pow(10, 7)));
-                y = (long) ((y + (7 * pow(10, 7))) * (-1));
+                x = (long) (x - (38.5f * pow(10, 7)));
+                y = (long) ((y + (7.7f * pow(10, 7))) * (-1));
 
-                x = (long) ((x * 700) / (5 * pow(10, 7)));
-                y = (long) ((y * 450) / (3 * pow(10, 7)));
+                x = (long) ((x * 700) / (3 * pow(10, 7)));
+                y = (long) ((y * 450) / (2.1f * pow(10, 7)));
 
                 positionsX[a] = (int) x;
                 positionsY[a] = (int) y;
