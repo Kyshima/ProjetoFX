@@ -18,6 +18,31 @@ public class CriacaoGrafo extends Graph {
         setPositions(x,geo);
     }
 
+    public CriacaoGrafo(CriacaoGrafo gG) {
+        super(gG.V());
+        positionsX = gG.positionsX;
+        positionsY = gG.positionsY;
+    }
+
+    public CriacaoGrafo(CriacaoGrafo gG, int newSize, SequentialSearchST<Integer, Geocache> geo){
+        super(newSize);
+        positionsX = new int[newSize];
+        positionsY = new int[newSize];
+
+        for(int i = 0 ; i < gG.V() && i < newSize ; i++ ){
+            positionsX[i] = gG.positionsX[i];
+            positionsY[i] = gG.positionsY[i];
+        }
+
+        setPositions(gG.V(),geo);
+
+        for(int v = 0 ; v < gG.V() ; v++){
+            for (Integer adj: gG.adj(v)){
+                this.addEdge(v,adj);
+            }
+        }
+    }
+
     private void setPositions(int b, SequentialSearchST<Integer, Geocache> geo){
         // Descobrir o menor, e maior X e Y (nao feito) X: 37,42 Y:-7,-10| Screen 700 a 450
         long x, y;
@@ -37,6 +62,16 @@ public class CriacaoGrafo extends Graph {
                 //System.out.println(positionsX[a] + " " + positionsY[a]);
             }
         }
+    }
+
+    public boolean containsEdge(int v, int a){
+        for(Integer adj: this.adj(v))
+            if(adj == a) return true;
+
+        for(Integer adj: this.adj(a))
+            if(adj == v) return true;
+
+        return false;
     }
 
     public void setPositionsX(int index ,int pos) {
