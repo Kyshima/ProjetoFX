@@ -239,7 +239,11 @@ public class Comeco {
         // Save
         //output(sizes, user_st, reg_st, geo_st, item_st, lig_st, tvb_st, hisV_st, hisTB_st);
 
-        new CriacaoGrafo(sizes[2], geo_st);
+        //new CriacaoGrafo(sizes[2], geo_st);
+        CriacaoGrafo gG;
+        gG = new CriacaoGrafo(sizes[2], geo_st);
+        new Controller(gG);
+
     }
 
     /**
