@@ -1,18 +1,14 @@
-package edu.ufp.inf.lp2_aed2.projeto;
+package sample;
 
 import edu.princeton.cs.algs4.SequentialSearchST;
 import edu.ufp.inf.lp2_aed2.projeto.Geocache;
-import edu.ufp.inf.lp2_aed2.projeto.Ligacoes;
 
 import javafx.scene.Group;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
-
-import java.awt.*;
 
 public class Controller {
     protected static final int GROUP_MARGIN = 10;
@@ -21,14 +17,13 @@ public class Controller {
     public Group graphGroup;
     private double radius = 7;
 
-    public Controller(int nVertices,SequentialSearchST<Integer, Geocache> geo, CriacaoGrafo gG) {
-        createNewGraph(nVertices,geo);
-        createGraphGroup(gG);
+    public void startController(int s, SequentialSearchST<Integer, Geocache> geo){
+        gG = new CriacaoGrafo(s,geo);
+        createGraphGroup();
     }
 
-    public void createGraphGroup(CriacaoGrafo gG) {
-        //graphGroup.getChildren().clear();
-        for(int i = 0; i < gG.V(); i++){
+    public void createGraphGroup() {
+        for(int i = 1; i < gG.V(); i++){
             Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.WHITE);
             Text id = new Text(" " + i);
 
@@ -37,7 +32,7 @@ public class Controller {
             sp.setLayoutY(gG.getPositionsY(i) - radius);
             sp.getChildren().addAll(c, id);
 
-            if(graphGroup.getChildren() != null)graphGroup.getChildren().add(sp);
+            graphGroup.getChildren().add(sp);
 
             for(Integer v : gG.adj(i)){
                 Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v), gG.getPositionsY(v));

@@ -1,9 +1,8 @@
-package edu.ufp.inf.lp2_aed2.projeto;
+package sample;
 
 import edu.princeton.cs.algs4.Graph;
-import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.SequentialSearchST;
-
+import edu.ufp.inf.lp2_aed2.projeto.Geocache;
 import static java.lang.Math.pow;
 
 public class CriacaoGrafo extends Graph {

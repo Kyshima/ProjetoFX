@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Comeco {
-    public static void comeco_main(String[] args) {
+    public static void comeco_main() {
         // Start
         // sizes = n_user, n_reg, n_geo,n_itens, n_tv, n_lig, n_visitado, n_histTB;
         int[] sizes = new int[8];
@@ -238,12 +238,6 @@ public class Comeco {
 
         // Save
         //output(sizes, user_st, reg_st, geo_st, item_st, lig_st, tvb_st, hisV_st, hisTB_st);
-
-
-        //new CriacaoGrafo(sizes[2], geo_st);
-        CriacaoGrafo gG;
-        gG = new CriacaoGrafo(sizes[2], geo_st);
-        new Controller(sizes[2],geo_st,gG);
 
     }
 
