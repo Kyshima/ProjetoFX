@@ -36,7 +36,7 @@ public class Controller {
 
     private CriacaoGrafo gG;
     public Group graphGroup;
-    private double radius = 7;
+    private double radius = 12;
 
     public void startController(int s, SequentialSearchST<Integer, Geocache> geo){
         gG = new CriacaoGrafo(s, geo);
@@ -54,6 +54,8 @@ public class Controller {
             sp.getChildren().addAll(c, id);
 
             graphGroup.getChildren().add(sp);
+
+
 
             for(Integer v : gG.adj(i)){
                 Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v), gG.getPositionsY(v));
