@@ -36,7 +36,7 @@ public class Controller {
 
     private CriacaoGrafo gG;
     public Group graphGroup;
-    private double radius = 12;
+    public double radius = 15;
 
     public void startController(int s, SequentialSearchST<Integer, Geocache> geo){
         gG = new CriacaoGrafo(s, geo);
@@ -45,7 +45,7 @@ public class Controller {
 
     public void createGraphGroup() {
         for(int i = 1; i < gG.V(); i++){
-            Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.LIGHTPINK);
+            Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.LIGHTBLUE);
             Text id = new Text(" " + i);
 
             StackPane sp = new StackPane();
@@ -213,5 +213,9 @@ public class Controller {
         gG = new CriacaoGrafo(sizes[2], geo_st);
         createGraphGroup();
 
+    }
+
+    public double getRadius() {
+        return radius;
     }
 }
