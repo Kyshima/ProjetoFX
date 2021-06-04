@@ -1,5 +1,6 @@
 package sample;
 
+import edu.princeton.cs.algs4.Edge;
 import edu.princeton.cs.algs4.RedBlackBST;
 import edu.princeton.cs.algs4.SequentialSearchST;
 import edu.ufp.inf.lp2_aed2.projeto.*;
@@ -20,6 +21,7 @@ import java.util.Scanner;
 public class Controller {
     protected static final int GROUP_MARGIN = 10;
     int[] sizes = new int[8];
+    public int[][] edges;
 
     SequentialSearchST<Integer, User> user_st = new SequentialSearchST<>();
     SequentialSearchST<Integer, Geocache> geo_st = new SequentialSearchST<>();
@@ -50,11 +52,11 @@ public class Controller {
             sp.setLayoutY(gG.getPositionsY(i) - radius);
             sp.getChildren().addAll(c, id);
 
-            graphGroup.getChildren().add(sp);
-
-            for(Integer v : gG.adj(i)){
-                Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v), gG.getPositionsY(v));
+            for(Edge v : gG.adj(i)){
+                //System.out.println(gG.getPositionsX(i) + " " + gG.getPositionsY(i) + " " + gG.getPositionsX(v.other(i)) + " " + gG.getPositionsY(v.other(i)));
+                Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v.other(i)), gG.getPositionsY(v.other(i)));
             }
+            graphGroup.getChildren().add(sp);
         }
     }
 
@@ -204,11 +206,10 @@ public class Controller {
         }
 
         gG = new CriacaoGrafo(sizes, geo_st, lig_st);
-        int[][] edges = gG.create_arraysLig(sizes,lig_st);
-        //gG.edges(edges, gG, lig_st, sizes);
-        System.out.println(gG);
+        edges = gG.create_arraysLig(sizes,lig_st);
+        gG.edgesDist(edges, gG, lig_st, sizes);
+        //System.out.println(gG);
         createGraphGroup();
-
 
     }
 

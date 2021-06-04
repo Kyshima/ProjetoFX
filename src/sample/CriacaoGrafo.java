@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 import static java.lang.Math.*;
 
-public class CriacaoGrafo extends Graph {
+public class CriacaoGrafo extends EdgeWeightedGraph {
 
     private int[] positionsX;
     private int[] positionsY;
@@ -19,8 +19,6 @@ public class CriacaoGrafo extends Graph {
         positionsX = new int[x[2]];
         positionsY = new int[x[2]];
         setPositions(x[2], geo);
-        create_arraysLig(x, lig);
-
     }
 
     public CriacaoGrafo(CriacaoGrafo gG) {
@@ -30,11 +28,12 @@ public class CriacaoGrafo extends Graph {
     }
 
     public CriacaoGrafo(CriacaoGrafo gG, int[] sizes, SequentialSearchST<Integer, Geocache> geo) {
-        super(sizes[2]);
-        positionsX = new int[sizes[2]];
-        positionsY = new int[sizes[2]];
+        super(sizes[2]+1);
+        int z = sizes[2]+1;
+        positionsX = new int[z];
+        positionsY = new int[z];
 
-        for (int i = 0; i < gG.V() && i < sizes[2]; i++) {
+        for (int i = 0; i < gG.V() && i < z; i++) {
             positionsX[i] = gG.positionsX[i];
             positionsY[i] = gG.positionsY[i];
         }
@@ -72,7 +71,7 @@ public class CriacaoGrafo extends Graph {
                 x = (long) (x - (min_x * pow(10, 7)));
                 y = (long) (y - (min_y * pow(10, 7)));
 
-                x = (long) ((x * 700) / (max_x * pow(10, 7)));
+                x = (long) ((x * 680) / (max_x * pow(10, 7)));
                 y = (long) ((y * 390) / (max_y * pow(10, 7)));
 
                 int[] f = resolveCollision(a, (int) x, (int) y);
@@ -150,7 +149,7 @@ public class CriacaoGrafo extends Graph {
         int sl = sizes[5];
         int pos = 0;
         ligs = new int[sizes[2]][10];
-        for(int g = 1; g < sizes[2]; g++){
+        for(int g = 1; g <= sizes[2]; g++){
             for(int l = 1; l < sl; l++){
                 if(lig.get(l) != null && Integer.parseInt(lig.get(l).id_1.replace("geocache","")) == g){
                     ligs[g-1][pos] = Integer.parseInt(lig.get(l).id_2.replace("geocache",""));
@@ -161,19 +160,46 @@ public class CriacaoGrafo extends Graph {
             pos = 0;
             sl = sizes[5];
         }
-        for(int j=1 ; j <sizes[2]; j++)
-        System.out.println(Arrays.toString(ligs[j-1]));
+        /*for(int j=1 ; j <= sizes[2]; j++)
+        System.out.println(j + " " + Arrays.toString(ligs[j-1]));*/
 
         return ligs;
     }
 
-    public void edges(int[][] ligs, CriacaoGrafo gG, SequentialSearchST<Integer, Ligacoes> lig, int[] sizes){
+    public void edgesDist(int[][] ligs, CriacaoGrafo gG, SequentialSearchST<Integer, Ligacoes> lig, int[] sizes){
+        int k;
+        // g percorre 18 geocaches
+        for(int g = 0; g < sizes[2]; g++){
+            //System.out.println("\n" + g);
+            // percorre enquanto existir informaçao
+            for (int s = 0; ligs[g][s] != 0; s++){
+                //System.out.print("\t" + s);
+                    // de 1 a 50
+                    for(k = 1; k < sizes[5]; k++) {
+                        //System.out.println((Integer.parseInt(lig.get(k).id_1.replace("geocache", "")) + " " + (g+1) + " " + (Integer.parseInt(lig.get(k).id_2.replace("geocache", "")) + " " + (ligs[g][s]))));
+                        if ((Integer.parseInt(lig.get(k).id_1.replace("geocache", "")) == g + 1) && (Integer.parseInt(lig.get(k).id_2.replace("geocache", "")) == ligs[g][s]))
+                            break;
+                    }
+                //System.out.println("Acertou");
+                    Edge e = new Edge(g, ligs[g][s]-1,lig.get(k).distancia);
+                    gG.addEdge(e);
+            }
+        }
+    }
+
+    public void edgesTemp(int[][] ligs, CriacaoGrafo gG, SequentialSearchST<Integer, Ligacoes> lig, int[] sizes){
         int t = gG.V()-1;
         int f = 10;
+        int k;
         for(int g = 1; g < t; g++){
             for (int s = 0; s < f; s++){
                 if(ligs[g-1][s] != 0){
-                    gG.addEdge(g-1, ligs[g-1][s]);
+                    //gG.addEdge(g-1, ligs[g-1][s]);
+                    for(k = 1; k < sizes[5]; k++)
+                        if((Integer.parseInt(lig.get(k).id_1.replace("geocache","")) == g-1) && (Integer.parseInt(lig.get(k).id_2.replace("geocache","")) == ligs[g-1][s]))
+                            break;
+                    Edge e = new Edge(g-1, ligs[g-1][s],lig.get(k).tempo);
+                    gG.addEdge(e);
                 }
             }
         }
