@@ -46,17 +46,21 @@ public class Controller {
         for(int i = 0; i < gG.V(); i++){
             Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.LIGHTBLUE);
             Text id = new Text(" " + (i+1));
+            if(geo_st.get(i) != null && geo_st.get(i).tipo.equals("premium")){
+                c.setFill(Color.LIGHTPINK);
+            }
 
             StackPane sp = new StackPane();
             sp.setLayoutX(gG.getPositionsX(i) - radius);
             sp.setLayoutY(gG.getPositionsY(i) - radius);
             sp.getChildren().addAll(c, id);
+            graphGroup.getChildren().add(sp);
 
             for(Edge v : gG.adj(i)){
                 //System.out.println(gG.getPositionsX(i) + " " + gG.getPositionsY(i) + " " + gG.getPositionsX(v.other(i)) + " " + gG.getPositionsY(v.other(i)));
                 Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v.other(i)), gG.getPositionsY(v.other(i)));
+                graphGroup.getChildren().add(l);
             }
-            graphGroup.getChildren().add(sp);
         }
     }
 
