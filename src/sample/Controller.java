@@ -62,6 +62,7 @@ public class Controller {
                 Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v.other(i)), gG.getPositionsY(v.other(i)));
                 l.setStyle("-fx-stroke: lightgrey");
                 l.setStyle("-fx-opacity: 0.1");
+
                 graphGroup.getChildren().add(l);
             }
         }
