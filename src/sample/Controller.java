@@ -41,9 +41,9 @@ public class Controller {
     }
 
     public void createGraphGroup() {
-        for(int i = 1; i < gG.V(); i++){
+        for(int i = 0; i < gG.V(); i++){
             Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.LIGHTBLUE);
-            Text id = new Text(" " + i);
+            Text id = new Text(" " + (i+1));
 
             StackPane sp = new StackPane();
             sp.setLayoutX(gG.getPositionsX(i) - radius);
@@ -52,9 +52,9 @@ public class Controller {
 
             graphGroup.getChildren().add(sp);
 
-            /*for(Integer v : gG.adj(i)){
+            for(Integer v : gG.adj(i)){
                 Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v), gG.getPositionsY(v));
-            }*/
+            }
         }
     }
 
@@ -205,7 +205,7 @@ public class Controller {
 
         gG = new CriacaoGrafo(sizes, geo_st, lig_st);
         int[][] edges = gG.create_arraysLig(sizes,lig_st);
-        gG.edges(edges, gG, lig_st, sizes);
+        //gG.edges(edges, gG, lig_st, sizes);
         System.out.println(gG);
         createGraphGroup();
 

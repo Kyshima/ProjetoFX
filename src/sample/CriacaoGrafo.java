@@ -166,4 +166,16 @@ public class CriacaoGrafo extends Graph {
 
         return ligs;
     }
+
+    public void edges(int[][] ligs, CriacaoGrafo gG, SequentialSearchST<Integer, Ligacoes> lig, int[] sizes){
+        int t = gG.V()-1;
+        int f = 10;
+        for(int g = 1; g < t; g++){
+            for (int s = 0; s < f; s++){
+                if(ligs[g-1][s] != 0){
+                    gG.addEdge(g-1, ligs[g-1][s]);
+                }
+            }
+        }
+    }
 }
