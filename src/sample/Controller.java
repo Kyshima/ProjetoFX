@@ -1,5 +1,6 @@
 package sample;
 
+import edu.princeton.cs.algs4.CPM;
 import edu.princeton.cs.algs4.Edge;
 import edu.princeton.cs.algs4.RedBlackBST;
 import edu.princeton.cs.algs4.SequentialSearchST;
@@ -59,6 +60,8 @@ public class Controller {
             for(Edge v : gG.adj(i)){
                 //System.out.println(gG.getPositionsX(i) + " " + gG.getPositionsY(i) + " " + gG.getPositionsX(v.other(i)) + " " + gG.getPositionsY(v.other(i)));
                 Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v.other(i)), gG.getPositionsY(v.other(i)));
+                l.setStyle("-fx-stroke: lightgrey");
+                l.setStyle("-fx-opacity: 0.1");
                 graphGroup.getChildren().add(l);
             }
         }
