@@ -1,23 +1,28 @@
 package sample;
 
+import edu.princeton.cs.algs4.DirectedEdge;
+import edu.princeton.cs.algs4.EdgeWeightedDigraph;
 import edu.princeton.cs.algs4.Graph;
 import edu.princeton.cs.algs4.SequentialSearchST;
 import edu.ufp.inf.lp2_aed2.projeto.Geocache;
+import edu.ufp.inf.lp2_aed2.projeto.Ligacoes;
 
 import java.util.Arrays;
 
 import static java.lang.Math.*;
 
-public class CriacaoGrafo extends Graph {
+public class CriacaoGrafo extends EdgeWeightedDigraph {
 
     private int[] positionsX;
     private int[] positionsY;
+    public int[][] ligs;
 
-    public CriacaoGrafo(int x, SequentialSearchST<Integer, Geocache> geo) {
-        super(x);
-        positionsX = new int[x];
-        positionsY = new int[x];
-        setPositions(x, geo);
+    public CriacaoGrafo(int[] x, SequentialSearchST<Integer, Geocache> geo, SequentialSearchST<Integer, Ligacoes> lig) {
+        super(x[2]);
+        positionsX = new int[x[2]];
+        positionsY = new int[x[2]];
+        setPositions(x[2], geo);
+        create_arraysLig(x, lig);
     }
 
     public CriacaoGrafo(CriacaoGrafo gG) {
@@ -26,23 +31,16 @@ public class CriacaoGrafo extends Graph {
         positionsY = gG.positionsY;
     }
 
-    public CriacaoGrafo(CriacaoGrafo gG, int newSize, SequentialSearchST<Integer, Geocache> geo) {
-        super(newSize);
-        positionsX = new int[newSize];
-        positionsY = new int[newSize];
+    public CriacaoGrafo(CriacaoGrafo gG, int[] sizes, SequentialSearchST<Integer, Geocache> geo) {
+        super(sizes[2]);
+        positionsX = new int[sizes[2]];
+        positionsY = new int[sizes[2]];
 
-        for (int i = 0; i < gG.V() && i < newSize; i++) {
+        for (int i = 0; i < gG.V() && i < sizes[2]; i++) {
             positionsX[i] = gG.positionsX[i];
             positionsY[i] = gG.positionsY[i];
         }
-
         setPositions(gG.V(), geo);
-
-        for (int v = 0; v < gG.V(); v++) {
-            for (Integer adj : gG.adj(v)) {
-                this.addEdge(v, adj);
-            }
-        }
     }
 
     private void setPositions(int b, SequentialSearchST<Integer, Geocache> geo) {
@@ -78,26 +76,13 @@ public class CriacaoGrafo extends Graph {
 
                 x = (long) ((x * 700) / (max_x * pow(10, 7)));
                 y = (long) ((y * 390) / (max_y * pow(10, 7)));
-                System.out.println(x + " " + y);
 
                 int[] f = resolveCollision(a, (int) x, (int) y);
-                System.out.println(Arrays.toString(f));
 
                 positionsX[a] = f[0];
                 positionsY[a] = f[1];
-                //System.out.println(Arrays.toString(positionsX) + "\n" + Arrays.toString(positionsY) + "\n\n");
             }
         }
-    }
-
-    public boolean containsEdge(int v, int a) {
-        for (Integer adj : this.adj(v))
-            if (adj == a) return true;
-
-        for (Integer adj : this.adj(a))
-            if (adj == v) return true;
-
-        return false;
     }
 
     public void setPositionsX(int index, int pos) {
@@ -124,122 +109,57 @@ public class CriacaoGrafo extends Graph {
 
     public int[] resolveCollision(int a, int x, int y) {
         int collisions = 0, px = 0, py = 0;
-        int backx = 0, backy = 0;
 
         for (int z = 0; z < a; z++) {
             if (checkCollision(positionsX[z], x))
             if (checkCollision(positionsY[z], y))
                 collisions++;
-            //System.out.println(z + " Comparacao " + positionsX[z] + " - " + x + " = " + abs(positionsX[z] - x) + " | " + positionsY[z] + " - " + y + " = " + abs(positionsY[z] - y) + "\t");
         }
-        //System.out.println(a + " " + collisions + "\n");
 
         while (collisions > 0) {
             Controller c = new Controller();
             if (checkCollision(positionsX[px], x)) {
-                if (/*x + c.getRadius() < 690 && backx != 1 && */x < 700/2) {
+                if (x < 700/2) {
                     x += c.getRadius() *2;
                 } else {
                     x -= (c.getRadius() *2) + 1;
-                    //backx = 1;
                 }
             } else {
-                //backx = 0;
                 px++;
             }
 
             if (checkCollision(positionsY[py], y)) {
-                if (/*y + c.getRadius() < 440 && backy != 1 && */y < 450/2) {
+                if (y < 450/2) {
                     y += c.getRadius() *2;
                 } else {
                     y -= (c.getRadius() *2) + 1;
-                    //backy = 1;
                 }
             } else {
-                //backy = 0;
                 py++;
             }
 
             collisions = 0;
             for (int z = 0; z < a; z++) {
-                //System.out.println(positionsX[z] + " " + x + "\t" + positionsY[z] + " " + y);
                 if (checkCollision(positionsX[z], x))
                     if (checkCollision(positionsY[z], y))
                         collisions++;
-                //System.out.println(z + " Comparacao " + positionsX[z] + " - " + x + " = " + abs(positionsX[z] - x) + " | " + positionsY[z] + " - " + y + " = " + abs(positionsY[z] - y) + "\t");
             }
-            //System.out.println(a + " " + collisions + "\n");
         }
         return new int[]{x, y};
-
-
-
-            /*while (collisionsx > 0 && w < a) {
-                System.out.print("x > 0 : " + a + " " + w + " " + positionsX[w] + " " + x + "\t");
-                Controller c = new Controller();
-                if (checkCollision(positionsX[w], x)) {
-                    System.out.print(" colisao ");
-
-                    if (x + c.getRadius() < 690 && back != 1) {
-                        y += c.getRadius();
-                        System.out.print(" dentro ");
-                    }
-                    else {
-                        x -= (c.getRadius() + 1); back = 1;
-                        System.out.print("sai");
-                    }
-                    flag = 1;
-                    w = 0;
-                } else {
-                    System.out.print(" continuei ");
-                    if (flag == 1) collisionsx--;
-                    flag = 0;
-                    back = 0;
-                    w++;
-                }
-                System.out.println();
-            }
-            System.out.print(" cabou colisao " + x);
-            flag = 0;
-            back = 0;
-
-            while (collisionsy > 0 && v < a) {
-                System.out.print("y > 0");
-                Controller c = new Controller();
-                if (checkCollision(positionsY[v], y)) {
-                    System.out.print(" colisao ");
-                    if (y + c.getRadius() < 440 && back != 1) {y += c.getRadius();
-                        System.out.print(" dentro ");}
-                    else {
-                        System.out.print(" sai ");
-                        y -= (c.getRadius() + 1);
-                        back = 1;
-                    }
-                    flag = 1;
-                    v = 0;
-                } else {
-                    System.out.print(" continuei ");
-                    if (flag == 1) collisionsy--;
-                    flag = 0;
-                    back = 0;
-                    v++;
-                }
-            }
-            System.out.println(" cabou colisao ");
-
-            collisionsx = 0;
-            collisionsy = 0;
-            for (int z = 0; z < a; z++) {
-                if (checkCollision(positionsX[z], x)) collisionsx++;
-                if (checkCollision(positionsY[z], y)) collisionsy++;
-            }
-            flag = 0;
-            back = 0;
-            w = 0;
-            v = 0;
-            System.out.println(collisionsx + " " + collisionsy + "\t");*/
-
-            //System.out.println(collisionsx + " " + collisionsy);
-
         }
+
+    public void create_arraysLig(int[] sizes, SequentialSearchST<Integer, Ligacoes> lig){
+        int sl = 10;
+        ligs = new int[sizes[2]][sl];
+        for(int g = 1; g < sizes[2]; g++){
+            for(int l = 1; l < sl; l++){
+                if(lig.get(l) != null && Integer.parseInt(lig.get(l).id_1.replace("geocache","")) == g)
+                    ligs[g][l] = Integer.parseInt(lig.get(l).id_2.replace("geocache",""));
+                else if(lig.get(l) != null && Integer.parseInt(lig.get(l).id_2.replace("geocache","")) == g)
+                    ligs[g][l] = Integer.parseInt(lig.get(l).id_1.replace("geocache",""));
+                else {l--; sl --;}
+            }
+        }
+        System.out.println(Arrays.deepToString(ligs));
+    }
 }

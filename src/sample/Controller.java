@@ -21,7 +21,6 @@ public class Controller {
     protected static final int GROUP_MARGIN = 10;
     int[] sizes = new int[8];
 
-
     SequentialSearchST<Integer, User> user_st = new SequentialSearchST<>();
     SequentialSearchST<Integer, Geocache> geo_st = new SequentialSearchST<>();
     SequentialSearchST<Integer, Item> item_st = new SequentialSearchST<>();
@@ -32,14 +31,12 @@ public class Controller {
     RedBlackBST<Integer, HistoricoVisited> hisV_st = new RedBlackBST<>();
     SequentialSearchST<Integer, HistoricoTB> hisTB_st = new SequentialSearchST<>();
 
-
-
     private CriacaoGrafo gG;
     public Group graphGroup;
     public double radius = 15;
 
-    public void startController(int s, SequentialSearchST<Integer, Geocache> geo){
-        gG = new CriacaoGrafo(s, geo);
+    public void startController(int s[]){
+        gG = new CriacaoGrafo(s, geo_st, lig_st);
         createGraphGroup();
     }
 
@@ -55,19 +52,17 @@ public class Controller {
 
             graphGroup.getChildren().add(sp);
 
-
-
-            for(Integer v : gG.adj(i)){
+            /*for(Integer v : gG.adj(i)){
                 Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v), gG.getPositionsY(v));
-            }
+            }*/
         }
     }
 
-    public void createNewGraph(int nVertices,SequentialSearchST<Integer, Geocache> geo){
+    public void createNewGraph(int[] nVertices){
         if(gG == null){
-            gG = new CriacaoGrafo(nVertices,geo);
+            gG = new CriacaoGrafo(nVertices,geo_st,lig_st);
         } else {
-            gG = new CriacaoGrafo(gG, nVertices,geo);
+            gG = new CriacaoGrafo(gG, nVertices ,geo_st);
         }
     }
 
@@ -204,14 +199,13 @@ public class Controller {
                 histTB.tb_end = Integer.parseInt(data2[3]);
                 hisTB_st.put(z, histTB);
             }
-
-
         } catch (FileNotFoundException erro) {
             System.out.println(erro);
         }
 
-        gG = new CriacaoGrafo(sizes[2], geo_st);
+        gG = new CriacaoGrafo(sizes, geo_st, lig_st);
         createGraphGroup();
+
 
     }
 

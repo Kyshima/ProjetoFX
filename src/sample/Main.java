@@ -14,9 +14,6 @@ public class Main extends Application {
 
         primaryStage.setTitle("Projeto");
         primaryStage.setScene(new Scene(root, 700, 450));
-        primaryStage.setOnShowing(event -> {
-            comeco_main();
-        });
         primaryStage.show();
     }
 
