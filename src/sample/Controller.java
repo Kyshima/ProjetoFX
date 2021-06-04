@@ -204,6 +204,9 @@ public class Controller {
         }
 
         gG = new CriacaoGrafo(sizes, geo_st, lig_st);
+        int[][] edges = gG.create_arraysLig(sizes,lig_st);
+        gG.edges(edges, gG, lig_st, sizes);
+        System.out.println(gG);
         createGraphGroup();
 
 

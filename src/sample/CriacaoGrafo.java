@@ -1,9 +1,6 @@
 package sample;
 
-import edu.princeton.cs.algs4.DirectedEdge;
-import edu.princeton.cs.algs4.EdgeWeightedDigraph;
-import edu.princeton.cs.algs4.Graph;
-import edu.princeton.cs.algs4.SequentialSearchST;
+import edu.princeton.cs.algs4.*;
 import edu.ufp.inf.lp2_aed2.projeto.Geocache;
 import edu.ufp.inf.lp2_aed2.projeto.Ligacoes;
 
@@ -11,7 +8,7 @@ import java.util.Arrays;
 
 import static java.lang.Math.*;
 
-public class CriacaoGrafo extends EdgeWeightedDigraph {
+public class CriacaoGrafo extends Graph {
 
     private int[] positionsX;
     private int[] positionsY;
@@ -23,6 +20,7 @@ public class CriacaoGrafo extends EdgeWeightedDigraph {
         positionsY = new int[x[2]];
         setPositions(x[2], geo);
         create_arraysLig(x, lig);
+
     }
 
     public CriacaoGrafo(CriacaoGrafo gG) {
@@ -148,7 +146,7 @@ public class CriacaoGrafo extends EdgeWeightedDigraph {
         return new int[]{x, y};
         }
 
-    public void create_arraysLig(int[] sizes, SequentialSearchST<Integer, Ligacoes> lig){
+    public int[][] create_arraysLig(int[] sizes, SequentialSearchST<Integer, Ligacoes> lig){
         int sl = sizes[5];
         int pos = 0;
         ligs = new int[sizes[2]][10];
@@ -158,16 +156,14 @@ public class CriacaoGrafo extends EdgeWeightedDigraph {
                     ligs[g-1][pos] = Integer.parseInt(lig.get(l).id_2.replace("geocache",""));
                     pos++;
                 }
-                else if(lig.get(l) != null && Integer.parseInt(lig.get(l).id_2.replace("geocache","")) == g){
-                    ligs[g-1][pos] = Integer.parseInt(lig.get(l).id_1.replace("geocache",""));
-                    pos++;
-                }
-                else {sl --;}
+//                else {sl --;}
             }
             pos = 0;
             sl = sizes[5];
         }
-        for(int j=0 ; j<sizes[2]; j++)
-        System.out.println(Arrays.toString(ligs[j]));
+        for(int j=1 ; j <sizes[2]; j++)
+        System.out.println(Arrays.toString(ligs[j-1]));
+
+        return ligs;
     }
 }
