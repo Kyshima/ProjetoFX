@@ -149,17 +149,25 @@ public class CriacaoGrafo extends EdgeWeightedDigraph {
         }
 
     public void create_arraysLig(int[] sizes, SequentialSearchST<Integer, Ligacoes> lig){
-        int sl = 10;
-        ligs = new int[sizes[2]][sl];
+        int sl = sizes[5];
+        int pos = 0;
+        ligs = new int[sizes[2]][10];
         for(int g = 1; g < sizes[2]; g++){
             for(int l = 1; l < sl; l++){
-                if(lig.get(l) != null && Integer.parseInt(lig.get(l).id_1.replace("geocache","")) == g)
-                    ligs[g][l] = Integer.parseInt(lig.get(l).id_2.replace("geocache",""));
-                else if(lig.get(l) != null && Integer.parseInt(lig.get(l).id_2.replace("geocache","")) == g)
-                    ligs[g][l] = Integer.parseInt(lig.get(l).id_1.replace("geocache",""));
-                else {l--; sl --;}
+                if(lig.get(l) != null && Integer.parseInt(lig.get(l).id_1.replace("geocache","")) == g){
+                    ligs[g-1][pos] = Integer.parseInt(lig.get(l).id_2.replace("geocache",""));
+                    pos++;
+                }
+                else if(lig.get(l) != null && Integer.parseInt(lig.get(l).id_2.replace("geocache","")) == g){
+                    ligs[g-1][pos] = Integer.parseInt(lig.get(l).id_1.replace("geocache",""));
+                    pos++;
+                }
+                else {sl --;}
             }
+            pos = 0;
+            sl = sizes[5];
         }
-        System.out.println(Arrays.deepToString(ligs));
+        for(int j=0 ; j<sizes[2]; j++)
+        System.out.println(Arrays.toString(ligs[j]));
     }
 }
