@@ -291,9 +291,10 @@ public class Controller {
         ObservableList<User> user = FXCollections.observableArrayList();
         for(int i = 0; i < sizes[0]; i++){
             if(user_st.get(i) != null){
-                user.add(new User(user_st.get(i).nome, user_st.get(i).tipo));
+                user.add(new User(i, user_st.get(i).nome, user_st.get(i).tipo, user_st.get(i).travelbug));
             }
         }
+        return user;
     }
 
     public double getRadius() {

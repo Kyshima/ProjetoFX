@@ -6,12 +6,19 @@ import java.lang.String;
 import java.util.Arrays;
 
 public class User {
-
+    public int id;
     public String nome;
     public String tipo;
     public int travelbug;
 
     public User(String nome, String tipo, int travelbug) {
+        this.nome = nome;
+        this.tipo = tipo;
+        this.travelbug = travelbug;
+    }
+
+    public User(int i, String nome, String tipo, int travelbug) {
+        this.id = i;
         this.nome = nome;
         this.tipo = tipo;
         this.travelbug = travelbug;
