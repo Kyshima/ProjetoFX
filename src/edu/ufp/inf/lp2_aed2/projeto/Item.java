@@ -24,7 +24,15 @@ public class Item {
     this.item = "";
   }
 
-  public String getId_geo(int i) {
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public String getId_geo() {
     return id_geo;
   }
 

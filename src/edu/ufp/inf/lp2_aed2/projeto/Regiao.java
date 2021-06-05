@@ -25,6 +25,14 @@ public class Regiao {
     this.n_caches = 0;
   }
 
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
   public String getNome() {
     return nome;
   }
@@ -33,7 +41,7 @@ public class Regiao {
     this.nome = nome;
   }
 
-  public int getN_caches() {
+  public int get_caches() {
     return n_caches;
   }
 

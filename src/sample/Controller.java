@@ -124,6 +124,7 @@ public class Controller {
 
                 String[] data = scan.nextLine().split(", ");
                 int id = Integer.parseInt(data[0]);
+                u.id = id;
                 u.nome = data[1];
                 u.tipo = data[2];
 
@@ -133,11 +134,13 @@ public class Controller {
             //Leitura da Regiao
             sizes[1] = scan.nextInt();
             scan.nextLine();
-
+            int reg_id = 1;
+            int item_id = 1;
             for (int i = 0; i < sizes[1]; i++) {
                 Regiao reg = new Regiao();
 
                 String[] data = scan.nextLine().split(", ");
+                reg.id = reg_id;
                 reg.nome = data[0];
                 reg.n_caches = Integer.parseInt(data[1]);
 
@@ -158,16 +161,19 @@ public class Controller {
                     geo.id_reg = i + 1;
 
                     // Leitura dos itens
+
                     for (int k = 1; k <= geo.n_itens; k++) {
                         Item item = new Item();
-
+                        item.id = item_id;
                         item.item = data1[4 + k];
-                        item.id_geo = geo.id;
+                        item.id_geo = data1[0];
                         item_st.put(sizes[3] + 1, item);
                         sizes[3]++;
+                        item_id++;
                     }
                     geo_st.put(idgeo, geo);
                 }
+                reg_id++;
                 reg_st.put(i + 1, reg);
             }
 
@@ -273,9 +279,9 @@ public class Controller {
 
     public ObservableList<User> userOL(){
         ObservableList<User> user = FXCollections.observableArrayList();
-        for(int i = 0; i <= sizes[0]; i++){
+        for(int i = 1; i <= sizes[0]; i++){
             if(user_st.get(i) != null){
-                user.add(new User(i, user_st.get(i).nome, user_st.get(i).tipo));
+                user.add(new User(user_st.get(i).getId(), user_st.get(i).nome, user_st.get(i).tipo));
             }
         }
         return user;
@@ -283,9 +289,9 @@ public class Controller {
 
     public ObservableList<Regiao> regOL(){
         ObservableList<Regiao> reg = FXCollections.observableArrayList();
-        for(int i = 0; i <= sizes[1]; i++){
+        for(int i = 1; i <= sizes[1]; i++){
             if(reg_st.get(i) != null){
-                reg.add(new Regiao(i, reg_st.get(i).nome, reg_st.get(i).n_caches));
+                reg.add(new Regiao(reg_st.get(i).getId(), reg_st.get(i).nome, reg_st.get(i).get_caches()));
             }
         }
         return reg;
@@ -295,7 +301,7 @@ public class Controller {
         ObservableList<Geocache> geo = FXCollections.observableArrayList();
         for(int i = 0; i <= sizes[2]; i++){
             if(geo_st.get(i) != null){
-                geo.add(new Geocache(geo_st.get(i).id,geo_st.get(i).tipo,geo_st.get(i).coordenadasX,geo_st.get(i).coordenadasY,geo_st.get(i).n_itens,geo_st.get(i).id_reg));
+                geo.add(new Geocache(geo_st.get(i).id,geo_st.get(i).tipo,geo_st.get(i).coordenadasX,geo_st.get(i).coordenadasY,geo_st.get(i).n_itens,geo_st.get(i).getId_reg()));
             }
         }
         return geo;
@@ -305,7 +311,7 @@ public class Controller {
         ObservableList<Item> item = FXCollections.observableArrayList();
         for(int i = 0; i <= sizes[3]; i++){
             if(item_st.get(i) != null){
-                item.add(new Item(i,item_st.get(i).id_geo,item_st.get(i).item));
+                item.add(new Item(item_st.get(i).getId(), item_st.get(i).getId_geo(), item_st.get(i).item));
             }
         }
         return item;

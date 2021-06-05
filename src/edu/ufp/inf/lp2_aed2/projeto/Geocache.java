@@ -33,6 +33,14 @@ public class Geocache {
         this.id_reg = 0;
     }
 
+    public int getId_reg() {
+        return id_reg;
+    }
+
+    public void setId_reg(int id_reg) {
+        this.id_reg = id_reg;
+    }
+
     public String getId() {
         return id;
     }
