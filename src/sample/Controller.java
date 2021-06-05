@@ -6,6 +6,8 @@ import edu.ufp.inf.lp2_aed2.projeto.*;
 import edu.ufp.inf.lp2_aed2.projeto.Date;
 import javafx.event.ActionEvent;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
@@ -24,6 +26,7 @@ public class Controller {
     public TextField id1;
     public TextField id2;
     public TextArea details;
+
 
     protected static final int GROUP_MARGIN = 10;
     int[] sizes = new int[8];
@@ -232,6 +235,7 @@ public class Controller {
 
     public void handleButtonAdd(javafx.event.ActionEvent actionEvent){
         try{
+            int flag = 1;
            int s = Integer.parseInt(id1.getText().replace("geocache", ""));
            int t = Integer.parseInt(id2.getText().replace("geocache", ""));
 
@@ -242,11 +246,21 @@ public class Controller {
                        if (lig[p][l] != t) {
                            Edge edge = new Edge(s-1,t-1, 0);
                            gG.addEdge(edge);
+                           break;
                        }
+                   }
+                   else{
+                       flag = 2;
                    }
                }
                createGraphGroup();
         }
+            if(flag == 2){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Vertice Nao Existe", ButtonType.OK);
+                alert.showAndWait();
+            }
+            flag = 1;
+            createGraphGroup();
          }catch(NumberFormatException e){ System.out.println(e); }
     }
 
