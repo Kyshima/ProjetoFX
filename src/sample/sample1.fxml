@@ -40,9 +40,9 @@
                               <Label layoutX="66.0" layoutY="33.0" text="ID1" />
                               <Label layoutX="66.0" layoutY="88.0" text="ID2" />
                               <Label layoutX="58.0" layoutY="142.0" text="Details" />
-                              <TextField fx:id="id1" layoutX="117.0" layoutY="29.0" prefHeight="25.0" prefWidth="543.0" promptText="Ex: 1" />
-                              <TextField fx:id="id2" layoutX="117.0" layoutY="84.0" prefHeight="25.0" prefWidth="543.0" promptText="Ex: 2" />
-                              <TextArea fx:id="details" layoutX="117.0" layoutY="142.0" prefHeight="200.0" prefWidth="543.0" promptText="Distancia, Tempo" />
+                              <TextField fx:id="id1" layoutX="117.0" layoutY="29.0" prefHeight="25.0" prefWidth="543.0" promptText="Ex: geocache10" />
+                              <TextField fx:id="id2" layoutX="117.0" layoutY="84.0" prefHeight="25.0" prefWidth="543.0" promptText="Ex: geocache10 (0 caso adicionar varias edges)" />
+                              <TextArea fx:id="details" layoutX="117.0" layoutY="142.0" prefHeight="200.0" prefWidth="543.0" promptText="d;weight / edge_end;weight" />
                            </children></AnchorPane>
                     </content>
                   </Tab>
