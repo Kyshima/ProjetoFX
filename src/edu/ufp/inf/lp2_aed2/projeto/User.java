@@ -17,11 +17,10 @@ public class User {
         this.travelbug = travelbug;
     }
 
-    public User(int i, String nome, String tipo, int travelbug) {
-        this.id = i;
+    public User(int id, String nome, String tipo) {
+        this.id = id;
         this.nome = nome;
         this.tipo = tipo;
-        this.travelbug = travelbug;
     }
 
     public User(String nome, String tipo) {

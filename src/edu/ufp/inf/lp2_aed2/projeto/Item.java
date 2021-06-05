@@ -4,8 +4,15 @@ import java.lang.String;
 
 public class Item {
 
+  public int id;
   public String id_geo;
   public String item;
+
+  public Item(int id, String id_geo, String item) {
+    this.id = id;
+    this.id_geo = id_geo;
+    this.item = item;
+  }
 
   public Item(String id_geo, String item) {
     this.id_geo = id_geo;

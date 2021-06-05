@@ -5,8 +5,15 @@ import java.lang.String;
 
 public class Regiao {
 
+  public int id;
   public String nome;
   public int n_caches;
+
+  public Regiao(int id, String nome, int n_caches) {
+    this.id = id;
+    this.nome = nome;
+    this.n_caches = n_caches;
+  }
 
   public Regiao(String nome, int n_caches) {
     this.nome = nome;

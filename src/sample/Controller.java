@@ -39,7 +39,7 @@ public class Controller {
     public TextArea details;
 
     public TableView<User> userTable;
-    public TableColumn<User, String> idUserCol;
+    public TableColumn<User, Integer> idUserCol;
     public TableColumn<User, String> nomeUserCol;
     public TableColumn<User, String> tipoUserCol;
 
@@ -54,6 +54,7 @@ public class Controller {
     public TableColumn<Geocache, String> cxGeoCol;
     public TableColumn<Geocache, String> cyGeoCol;
     public TableColumn<Geocache, String> itensGeoCol;
+    public TableColumn<Geocache, String> iDRegGeoCol;
 
     public TableView<Item> itemTable;
     public TableColumn<Item, String> idItensCol;
@@ -75,13 +76,10 @@ public class Controller {
     SequentialSearchST<Integer, HistoricoTB> hisTB_st = new SequentialSearchST<>();
 
     private CriacaoGrafo gG;
-    private User user;
-
 
     public void createGraphGroup() {
         for (int i = 0; i < gG.V(); i++) {
             for (Edge v : gG.adj(i)) {
-                //System.out.println(gG.getPositionsX(i) + " " + gG.getPositionsY(i) + " " + gG.getPositionsX(v.other(i)) + " " + gG.getPositionsY(v.other(i)));
                 Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v.other(i)), gG.getPositionsY(v.other(i)));
 
                 l.setStyle("-fx-stroke-width: " + v.weight());
@@ -249,52 +247,68 @@ public class Controller {
             System.out.println(erro);
         }
 
-        idUserCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        nomeUserCol.setCellValueFactory(new PropertyValueFactory<>("tipo"));
-        tipoUserCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        idUserCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        nomeUserCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        tipoUserCol.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+        userTable.setItems(userOL());
 
-        idRegCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        nomeRegCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        idGeoRegCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        idRegCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        nomeRegCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        idGeoRegCol.setCellValueFactory(new PropertyValueFactory<>("n_cache"));
+        regTable.setItems(regOL());
 
-        idGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        tipoGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        cxGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        cyGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        itensGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        idGeoCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tipoGeoCol.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+        cxGeoCol.setCellValueFactory(new PropertyValueFactory<>("coordenadasX"));
+        cyGeoCol.setCellValueFactory(new PropertyValueFactory<>("coordenadasY"));
+        itensGeoCol.setCellValueFactory(new PropertyValueFactory<>("n_itens"));
+        iDRegGeoCol.setCellValueFactory(new PropertyValueFactory<>("id_reg"));
+        geoTable.setItems(geoOL());
 
-        idItensCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        geoIdItensCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        nomeItensCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        idUserCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        nomeUserCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        tipoUserCol.setCellFactory(TextFieldTableCell.forTableColumn());
-
-        idRegCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        nomeRegCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        idGeoRegCol.setCellFactory(TextFieldTableCell.forTableColumn());
-
-        idGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        tipoGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        cxGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        cyGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        itensGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
-
-        idItensCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        geoIdItensCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        nomeItensCol.setCellFactory(TextFieldTableCell.forTableColumn());
-
-
+        idItensCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        geoIdItensCol.setCellValueFactory(new PropertyValueFactory<>("id_geo"));
+        nomeItensCol.setCellValueFactory(new PropertyValueFactory<>("item"));
+        itemTable.setItems(itemOL());
     }
 
     public ObservableList<User> userOL(){
         ObservableList<User> user = FXCollections.observableArrayList();
-        for(int i = 0; i < sizes[0]; i++){
+        for(int i = 0; i <= sizes[0]; i++){
             if(user_st.get(i) != null){
-                user.add(new User(i, user_st.get(i).nome, user_st.get(i).tipo, user_st.get(i).travelbug));
+                user.add(new User(i, user_st.get(i).nome, user_st.get(i).tipo));
             }
         }
         return user;
+    }
+
+    public ObservableList<Regiao> regOL(){
+        ObservableList<Regiao> reg = FXCollections.observableArrayList();
+        for(int i = 0; i <= sizes[1]; i++){
+            if(reg_st.get(i) != null){
+                reg.add(new Regiao(i, reg_st.get(i).nome, reg_st.get(i).n_caches));
+            }
+        }
+        return reg;
+    }
+
+    public ObservableList<Geocache> geoOL(){
+        ObservableList<Geocache> geo = FXCollections.observableArrayList();
+        for(int i = 0; i <= sizes[2]; i++){
+            if(geo_st.get(i) != null){
+                geo.add(new Geocache(geo_st.get(i).id,geo_st.get(i).tipo,geo_st.get(i).coordenadasX,geo_st.get(i).coordenadasY,geo_st.get(i).n_itens,geo_st.get(i).id_reg));
+            }
+        }
+        return geo;
+    }
+
+    public ObservableList<Item> itemOL(){
+        ObservableList<Item> item = FXCollections.observableArrayList();
+        for(int i = 0; i <= sizes[3]; i++){
+            if(item_st.get(i) != null){
+                item.add(new Item(i,item_st.get(i).id_geo,item_st.get(i).item));
+            }
+        }
+        return item;
     }
 
     public double getRadius() {
@@ -404,4 +418,27 @@ public class Controller {
         createGraphGroup();
     }
 
+    public void addUser(ActionEvent actionEvent) {
+    }
+
+    public void removeUser(ActionEvent actionEvent) {
+    }
+
+    public void addReg(ActionEvent actionEvent) {
+    }
+
+    public void removeReg(ActionEvent actionEvent) {
+    }
+
+    public void removeGeo(ActionEvent actionEvent) {
+    }
+
+    public void addGeo(ActionEvent actionEvent) {
+    }
+
+    public void removeItem(ActionEvent actionEvent) {
+    }
+
+    public void addItem(ActionEvent actionEvent) {
+    }
 }
