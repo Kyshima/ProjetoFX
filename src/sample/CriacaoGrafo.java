@@ -61,6 +61,7 @@ public class CriacaoGrafo extends EdgeWeightedGraph {
         }
         max_x = (max_x - min_x);
         max_y = (max_y - min_y);
+
         long x, y;
 
         for (int a = 0; a < b; a++) {
@@ -71,8 +72,8 @@ public class CriacaoGrafo extends EdgeWeightedGraph {
                 x = (long) (x - (min_x * pow(10, 7)));
                 y = (long) (y - (min_y * pow(10, 7)));
 
-                x = (long) ((x * 680) / (max_x * pow(10, 7)));
-                y = (long) ((y * 390) / (max_y * pow(10, 7)));
+                x = (long) (((x * 660) / (max_x * pow(10, 7))) + 20);
+                y = (long) (((y * 350) / (max_y * pow(10, 7))) + 20);
 
                 int[] f = resolveCollision(a, (int) x, (int) y);
 

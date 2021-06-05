@@ -10,7 +10,7 @@ import static edu.ufp.inf.lp2_aed2.projeto.Comeco.comeco_main;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("sample1.fxml"));
 
         primaryStage.setTitle("Projeto");
         primaryStage.setScene(new Scene(root, 700, 450));
