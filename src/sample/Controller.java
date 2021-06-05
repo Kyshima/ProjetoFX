@@ -260,7 +260,7 @@ public class Controller {
 
         idRegCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         nomeRegCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        idGeoRegCol.setCellValueFactory(new PropertyValueFactory<>("n_cache"));
+        idGeoRegCol.setCellValueFactory(new PropertyValueFactory<>("n_caches"));
         regTable.setItems(regOL());
 
         idGeoCol.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -291,7 +291,7 @@ public class Controller {
         ObservableList<Regiao> reg = FXCollections.observableArrayList();
         for(int i = 1; i <= sizes[1]; i++){
             if(reg_st.get(i) != null){
-                reg.add(new Regiao(reg_st.get(i).getId(), reg_st.get(i).nome, reg_st.get(i).get_caches()));
+                reg.add(new Regiao(reg_st.get(i).getId(), reg_st.get(i).nome, reg_st.get(i).getN_caches()));
             }
         }
         return reg;
@@ -358,7 +358,7 @@ public class Controller {
 
                                 lig_st.put(sizes[5]-1, n_lig);
 
-                                flag = 2;
+                                flag = 3;
 
                                 break;
                             }
@@ -375,19 +375,33 @@ public class Controller {
 
             } else {                // Vertices
                 for (int p = 1; p < sizes[2]; p++) {
-                    if (p == s) {
-                        existe2++;
+                    if(!geo_st.contains(s)){
+                        Geocache geo = new Geocache();
+                        String[] lines = details.getText().split(";");
+                        geo.id = id1.getText();
+                        geo.tipo = lines[0];
+                        geo.coordenadasX = Float.parseFloat(lines[1]);
+                        geo.coordenadasY = Float.parseFloat(lines[2]);
+                        geo.n_itens = Integer.parseInt(lines[3]);
+                        geo.id_reg = Integer.parseInt(lines[4]);
+                        sizes[2]++;
+                        geo_st.put(sizes[2], geo);
+                        flag = 2;
+                        break;
                     }
                 }
-
                 graphGroup.getChildren().clear();
+                gG = null;
+                gG = new CriacaoGrafo(sizes, geo_st, lig_st);
+                int[][] array = gG.create_arraysLig(sizes, lig_st);
+                gG.edgesDist(array, gG, lig_st, sizes);
                 createGraphGroup();
             }
             if (flag == 2) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Vertice Adicionado", ButtonType.CLOSE);
                 alert.showAndWait();
             } else if (flag == 3) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Vertices Adicionados", ButtonType.CLOSE);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Edges Adicionados", ButtonType.CLOSE);
                 alert.showAndWait();
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Vertice nao Existe", ButtonType.CLOSE);

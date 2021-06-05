@@ -41,7 +41,7 @@ public class Regiao {
     this.nome = nome;
   }
 
-  public int get_caches() {
+  public int getN_caches() {
     return n_caches;
   }
 
