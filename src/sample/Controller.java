@@ -4,17 +4,23 @@ import edu.princeton.cs.algs4.*;
 import edu.ufp.inf.lp2_aed2.projeto.*;
 
 import edu.ufp.inf.lp2_aed2.projeto.Date;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Group;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextArea;
+import javafx.util.Callback;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -26,14 +32,39 @@ import java.io.FileReader;
 import java.util.Scanner;
 
 public class Controller {
-    protected static final int GROUP_MARGIN = 10;
+    public Group graphGroup;
+
     public TextField id1;
     public TextField id2;
     public TextArea details;
+
+    public TableView<User> userTable;
+    public TableColumn<User, String> idUserCol;
+    public TableColumn<User, String> nomeUserCol;
+    public TableColumn<User, String> tipoUserCol;
+
+    public TableView<Regiao> regTable;
+    public TableColumn<Regiao, String> idRegCol;
+    public TableColumn<Regiao, String> nomeRegCol;
+    public TableColumn<Regiao, String> idGeoRegCol;
+
+    public TableView<Geocache> geoTable;
+    public TableColumn<Geocache, String> idGeoCol;
+    public TableColumn<Geocache, String> tipoGeoCol;
+    public TableColumn<Geocache, String> cxGeoCol;
+    public TableColumn<Geocache, String> cyGeoCol;
+    public TableColumn<Geocache, String> itensGeoCol;
+
+    public TableView<Item> itemTable;
+    public TableColumn<Item, String> idItensCol;
+    public TableColumn<Item, String> geoIdItensCol;
+    public TableColumn<Item, String> nomeItensCol;
+
     public int[][] edges;
-    public Group graphGroup;
+
     public double radius = 15;
     int[] sizes = new int[8];
+    protected static final int GROUP_MARGIN = 10;
     SequentialSearchST<Integer, User> user_st = new SequentialSearchST<>();
     SequentialSearchST<Integer, Geocache> geo_st = new SequentialSearchST<>();
     SequentialSearchST<Integer, Item> item_st = new SequentialSearchST<>();
@@ -42,7 +73,10 @@ public class Controller {
     SequentialSearchST<Integer, Travelbug> tvb_st = new SequentialSearchST<>();
     RedBlackBST<Integer, HistoricoVisited> hisV_st = new RedBlackBST<>();
     SequentialSearchST<Integer, HistoricoTB> hisTB_st = new SequentialSearchST<>();
+
     private CriacaoGrafo gG;
+    private User user;
+
 
     public void createGraphGroup() {
         for (int i = 0; i < gG.V(); i++) {
@@ -79,8 +113,8 @@ public class Controller {
     }
 
     public void startMain(javafx.event.ActionEvent actionEvent) {
-        for (int i = 0; i < 8; i++) sizes[i] = 0;
 
+        for (int i = 0; i < 8; i++) sizes[i] = 0;
         // Leitura do ficheiro input.txt
         try {
             Scanner scan = new Scanner(new BufferedReader(new FileReader("data/input.txt")));
@@ -215,6 +249,51 @@ public class Controller {
             System.out.println(erro);
         }
 
+        idUserCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        nomeUserCol.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+        tipoUserCol.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        idRegCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        nomeRegCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        idGeoRegCol.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        idGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        tipoGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        cxGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        cyGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        itensGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        idItensCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        geoIdItensCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        nomeItensCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        idUserCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        nomeUserCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        tipoUserCol.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        idRegCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        nomeRegCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        idGeoRegCol.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        idGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        tipoGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        cxGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        cyGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        itensGeoCol.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        idItensCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        geoIdItensCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        nomeItensCol.setCellFactory(TextFieldTableCell.forTableColumn());
+
+
+    }
+
+    public ObservableList<User> userOL(){
+        ObservableList<User> user = FXCollections.observableArrayList();
+        for(int i = 0; i < sizes[0]; i++){
+            if(user_st.get(i) != null){
+                user.add(new User(user_st.get(i).nome, user_st.get(i).tipo));
+            }
+        }
     }
 
     public double getRadius() {
@@ -311,7 +390,6 @@ public class Controller {
         gG = new CriacaoGrafo(sizes, geo_st, lig_st);
         edges = gG.create_arraysLig(sizes, lig_st);
         gG.edgesDist(edges, gG, lig_st, sizes);
-        //System.out.println(gG);
         createGraphGroup();
     }
 
@@ -322,7 +400,7 @@ public class Controller {
         gG = new CriacaoGrafo(sizes, geo_st, lig_st);
         edges = gG.create_arraysLig(sizes, lig_st);
         gG.edgesTemp(edges, gG, lig_st, sizes);
-        //System.out.println(gG);
         createGraphGroup();
     }
+
 }

@@ -1,21 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.Group?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="700.0">
         <menus>
@@ -67,15 +56,15 @@
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <TableView layoutX="-1.0" layoutY="2.0" prefHeight="388.0" prefWidth="671.0" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <TableView fx:id="userTable" layoutX="-1.0" layoutY="2.0" prefHeight="388.0" prefWidth="671.0" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                   <columns>
-                                                      <TableColumn prefWidth="50.0" text="ID" />
-                                                    <TableColumn prefWidth="120.0" text="Nome" />
-                                                    <TableColumn prefWidth="120.0" text="Tipo" />
+                                                      <TableColumn fx:id="idUserCol" prefWidth="50.0" text="ID" />
+                                                    <TableColumn fx:id="nomeUserCol" prefWidth="120.0" text="Nome" />
+                                                    <TableColumn fx:id="tipoUserCol" prefWidth="120.0" text="Tipo" />
                                                   </columns>
                                                 </TableView>
-                                                <Button layoutY="388.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="336.0" text="Adicionar" />
-                                                <Button layoutX="336.0" layoutY="388.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="336.0" text="Remover" />
+                                                <Button fx:id="addUserButton" layoutY="388.0" mnemonicParsing="false" onAction="#addUser" prefHeight="33.0" prefWidth="336.0" text="Adicionar" />
+                                                <Button fx:id="removeUserButton" layoutX="336.0" layoutY="388.0" mnemonicParsing="false" onAction="#removeUser" prefHeight="33.0" prefWidth="336.0" text="Remover" />
                                              </children>
                                           </AnchorPane>
                                     </content>
@@ -84,15 +73,15 @@
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <TableView prefHeight="388.0" prefWidth="673.0">
+                                                <TableView fx:id="regTable" prefHeight="388.0" prefWidth="673.0">
                                                    <columns>
-                                                      <TableColumn prefWidth="50.0" text="ID" />
-                                                      <TableColumn prefWidth="120.0" text="Nome" />
-                                                      <TableColumn prefWidth="120.0" text="ID Geocache" />
+                                                      <TableColumn fx:id="idRegCol" prefWidth="50.0" text="ID" />
+                                                      <TableColumn fx:id="nomeRegCol" prefWidth="120.0" text="Nome" />
+                                                      <TableColumn fx:id="idGeoRegCol" prefWidth="120.0" text="ID Geocache" />
                                                    </columns>
                                                 </TableView>
-                                                <Button layoutY="388.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="336.0" text="Adicionar" />
-                                                <Button layoutX="346.0" layoutY="398.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="336.0" text="Remover" />
+                                                <Button fx:id="addRegButton" layoutY="388.0" mnemonicParsing="false" onAction="#addReg" prefHeight="33.0" prefWidth="336.0" text="Adicionar" />
+                                                <Button fx:id="removeRegButton" layoutX="336.0" layoutY="388.0" mnemonicParsing="false" onAction="#removeReg" prefHeight="33.0" prefWidth="336.0" text="Remover" />
                                              </children>
                                           </AnchorPane>
                                     </content>
@@ -101,17 +90,17 @@
                                       <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <TableView prefHeight="388.0" prefWidth="673.0">
+                                                <TableView fx:id="geoTable" prefHeight="388.0" prefWidth="673.0">
                                                    <columns>
-                                                      <TableColumn prefWidth="120.0" text="ID" />
-                                                      <TableColumn prefWidth="120.0" text="Tipo" />
-                                                      <TableColumn prefWidth="120.0" text="Coordenada X" />
-                                                      <TableColumn prefWidth="120.0" text="Coordenada Y" />
-                                                      <TableColumn prefWidth="120.0" text="Itens" />
+                                                      <TableColumn fx:id="idGeoCol" prefWidth="120.0" text="ID" />
+                                                      <TableColumn fx:id="tipoGeoCol" prefWidth="120.0" text="Tipo" />
+                                                      <TableColumn fx:id="cxGeoCol" prefWidth="120.0" text="Coordenada X" />
+                                                      <TableColumn fx:id="cyGeoCol" prefWidth="120.0" text="Coordenada Y" />
+                                                      <TableColumn fx:id="itensGeoCol" prefWidth="120.0" text="Itens" />
                                                    </columns>
                                                 </TableView>
-                                                <Button layoutX="336.0" layoutY="388.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="336.0" text="Remover" />
-                                                <Button layoutY="388.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="336.0" text="Adicionar" />
+                                                <Button fx:id="removeGeoButton" layoutX="336.0" layoutY="388.0" mnemonicParsing="false" onAction="#removeGeo" prefHeight="33.0" prefWidth="336.0" text="Remover" />
+                                                <Button fx:id="addGeoButton" layoutY="388.0" mnemonicParsing="false" onAction="#addGeo" prefHeight="33.0" prefWidth="336.0" text="Adicionar" />
                                              </children>
                                           </AnchorPane>
                                       </content>
@@ -120,15 +109,15 @@
                                       <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <TableView prefHeight="388.0" prefWidth="673.0">
+                                                <TableView fx:id="itemTable" prefHeight="388.0" prefWidth="673.0">
                                                    <columns>
-                                                      <TableColumn prefWidth="50.0" text="ID" />
-                                                      <TableColumn prefWidth="120.0" text="ID Geocache" />
-                                                      <TableColumn prefWidth="120.0" text="Nome" />
+                                                      <TableColumn fx:id="idItensCol" prefWidth="50.0" text="ID" />
+                                                      <TableColumn fx:id="geoIdItensCol" prefWidth="120.0" text="ID Geocache" />
+                                                      <TableColumn fx:id="nomeItensCol" prefWidth="120.0" text="Nome" />
                                                    </columns>
                                                 </TableView>
-                                                <Button layoutX="336.0" layoutY="388.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="336.0" text="Remover" />
-                                                <Button layoutY="388.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="336.0" text="Adicionar" />
+                                                <Button fx:id="removeItemButton" layoutX="336.0" layoutY="388.0" mnemonicParsing="false" onAction="#removeItem" prefHeight="33.0" prefWidth="336.0" text="Remover" />
+                                                <Button fx:id="addItemButton" layoutY="388.0" mnemonicParsing="false" onAction="#addItem" prefHeight="33.0" prefWidth="336.0" text="Adicionar" />
                                              </children>
                                           </AnchorPane>
                                       </content>
