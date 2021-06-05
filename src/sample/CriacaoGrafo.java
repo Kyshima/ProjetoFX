@@ -73,7 +73,7 @@ public class CriacaoGrafo extends EdgeWeightedGraph {
                 y = (long) (y - (min_y * pow(10, 7)));
 
                 x = (long) (((x * 660) / (max_x * pow(10, 7))) + 20);
-                y = (long) (((y * 350) / (max_y * pow(10, 7))) + 20);
+                y = (long) (((y * 380) / (max_y * pow(10, 7))) + 20);
 
                 int[] f = resolveCollision(a, (int) x, (int) y);
 
@@ -161,49 +161,54 @@ public class CriacaoGrafo extends EdgeWeightedGraph {
             pos = 0;
             sl = sizes[5];
         }
-        /*for(int j=1 ; j <= sizes[2]; j++)
-        System.out.println(j + " " + Arrays.toString(ligs[j-1]));*/
 
         return ligs;
     }
 
     public void edgesDist(int[][] ligs, CriacaoGrafo gG, SequentialSearchST<Integer, Ligacoes> lig, int[] sizes){
+        float max_d = 0.0f;
+        for(int r = 1; r < sizes[5]; r++){
+            if(lig.get(r) != null && lig.get(r).distancia > max_d) max_d = lig.get(r).distancia;
+        }
+
         int k;
         // g percorre 18 geocaches
         for(int g = 0; g < sizes[2]; g++){
-            //System.out.println("\n" + g);
             // percorre enquanto existir informaçao
             for (int s = 0; ligs[g][s] != 0; s++){
-                //System.out.print("\t" + s);
                     // de 1 a 50
                     for(k = 1; k < sizes[5]; k++) {
-                        //System.out.println((Integer.parseInt(lig.get(k).id_1.replace("geocache", "")) + " " + (g+1) + " " + (Integer.parseInt(lig.get(k).id_2.replace("geocache", "")) + " " + (ligs[g][s]))));
                         if ((Integer.parseInt(lig.get(k).id_1.replace("geocache", "")) == g + 1) && (Integer.parseInt(lig.get(k).id_2.replace("geocache", "")) == ligs[g][s]))
                             break;
                     }
-                //System.out.println("Acertou");
-                    Edge e = new Edge(g, ligs[g][s]-1,lig.get(k).distancia);
+                    float d = lig.get(k).distancia;
+                    d = ((d * 3) / (max_d) + 0.4f);
+
+                    Edge e = new Edge(g, ligs[g][s]-1,d);
                     gG.addEdge(e);
             }
         }
     }
 
     public void edgesTemp(int[][] ligs, CriacaoGrafo gG, SequentialSearchST<Integer, Ligacoes> lig, int[] sizes){
+        float max_t = 0.0f;
+        for(int r = 1; r < sizes[5]; r++){
+            if(lig.get(r) != null && lig.get(r).tempo > max_t) max_t = lig.get(r).tempo;
+        }
+
         int k;
         // g percorre 18 geocaches
         for(int g = 0; g < sizes[2]; g++){
-            //System.out.println("\n" + g);
             // percorre enquanto existir informaçao
             for (int s = 0; ligs[g][s] != 0; s++){
-                //System.out.print("\t" + s);
-                // de 1 a 50
                 for(k = 1; k < sizes[5]; k++) {
-                    //System.out.println((Integer.parseInt(lig.get(k).id_1.replace("geocache", "")) + " " + (g+1) + " " + (Integer.parseInt(lig.get(k).id_2.replace("geocache", "")) + " " + (ligs[g][s]))));
                     if ((Integer.parseInt(lig.get(k).id_1.replace("geocache", "")) == g + 1) && (Integer.parseInt(lig.get(k).id_2.replace("geocache", "")) == ligs[g][s]))
                         break;
                 }
-                //System.out.println("Acertou");
-                Edge e = new Edge(g, ligs[g][s]-1, lig.get(k).tempo);
+                float t = lig.get(k).tempo;
+                t = ((t * 3) / (max_t) + 0.4f);
+
+                Edge e = new Edge(g, ligs[g][s]-1,t);
                 gG.addEdge(e);
             }
         }

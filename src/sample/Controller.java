@@ -17,6 +17,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.ColorModel;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -41,12 +44,17 @@ public class Controller {
     SequentialSearchST<Integer, HistoricoTB> hisTB_st = new SequentialSearchST<>();
     private CriacaoGrafo gG;
 
-    public void startController(int s[]) {
-        gG = new CriacaoGrafo(s, geo_st, lig_st);
-        createGraphGroup();
-    }
-
     public void createGraphGroup() {
+        for (int i = 0; i < gG.V(); i++) {
+            for (Edge v : gG.adj(i)) {
+                //System.out.println(gG.getPositionsX(i) + " " + gG.getPositionsY(i) + " " + gG.getPositionsX(v.other(i)) + " " + gG.getPositionsY(v.other(i)));
+                Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v.other(i)), gG.getPositionsY(v.other(i)));
+
+                l.setStyle("-fx-stroke-width: " + v.weight());
+                graphGroup.getChildren().add(l);
+            }
+        }
+
         for (int i = 0; i < gG.V(); i++) {
             Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.LIGHTBLUE);
             Text id = new Text(" " + (i + 1));
@@ -59,15 +67,6 @@ public class Controller {
             sp.setLayoutY(gG.getPositionsY(i) - radius);
             sp.getChildren().addAll(c, id);
             graphGroup.getChildren().add(sp);
-
-            for (Edge v : gG.adj(i)) {
-                //System.out.println(gG.getPositionsX(i) + " " + gG.getPositionsY(i) + " " + gG.getPositionsX(v.other(i)) + " " + gG.getPositionsY(v.other(i)));
-                Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v.other(i)), gG.getPositionsY(v.other(i)));
-
-                l.setStyle("-fx-stroke: lightgrey");
-                l.setStyle("-fx-opacity: 0.2");
-                graphGroup.getChildren().add(l);
-            }
         }
     }
 
