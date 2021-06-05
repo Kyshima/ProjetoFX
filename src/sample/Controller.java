@@ -1,25 +1,30 @@
 package sample;
 
-import edu.princeton.cs.algs4.CPM;
-import edu.princeton.cs.algs4.Edge;
-import edu.princeton.cs.algs4.RedBlackBST;
-import edu.princeton.cs.algs4.SequentialSearchST;
+import edu.princeton.cs.algs4.*;
 import edu.ufp.inf.lp2_aed2.projeto.*;
 
+import edu.ufp.inf.lp2_aed2.projeto.Date;
+import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
 
-import java.awt.event.ActionEvent;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
 
 public class Controller {
+    public TextField id1;
+    public TextField id2;
+    public TextArea details;
+
     protected static final int GROUP_MARGIN = 10;
     int[] sizes = new int[8];
     public int[][] edges;
@@ -223,5 +228,36 @@ public class Controller {
 
     public double getRadius() {
         return radius;
+    }
+
+    public void handleButtonAdd(javafx.event.ActionEvent actionEvent){
+        try{
+           int s = Integer.parseInt(id1.getText().replace("geocache", ""));
+           int t = Integer.parseInt(id2.getText().replace("geocache", ""));
+
+           int[][] lig = gG.getLigs();
+           for(int p = 0; p < sizes[2]; p++){
+               for(int l = 0; l < 10; l++){
+                   if(p == s){
+                       if (lig[p][l] != t) {
+                           Edge edge = new Edge(s-1,t-1, 0);
+                           gG.addEdge(edge);
+                       }
+                   }
+               }
+               createGraphGroup();
+        }
+         }catch(NumberFormatException e){ System.out.println(e); }
+    }
+
+    public void handleButtonEdit(javafx.event.ActionEvent actionEvent) {
+    }
+
+    public void handleButtonRemove(javafx.event.ActionEvent actionEvent) {
+    }
+
+    public void clearMain(ActionEvent actionEvent) {
+        graphGroup.getChildren().clear();
+        gG = null;
     }
 }

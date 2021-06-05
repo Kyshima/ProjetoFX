@@ -205,4 +205,8 @@ public class CriacaoGrafo extends EdgeWeightedGraph {
             }
         }
     }
+
+    public int[][] getLigs() {
+        return ligs;
+    }
 }

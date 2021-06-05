@@ -12,6 +12,7 @@
           <Menu mnemonicParsing="false" text="Menu">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#startMain" text="Start" />
+                  <MenuItem mnemonicParsing="false" onAction="#clearMain" text="Clear" />
             </items>
           </Menu>
         </menus>
@@ -33,15 +34,15 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="450.0" prefWidth="700.0">
                            <children>
-                              <Button layoutY="371.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="233.3" text="Add" />
-                              <Button layoutX="234.0" layoutY="371.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="233.3" text="Edit" />
-                              <Button layoutX="468.0" layoutY="371.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="233.3" text="Remove" />
-                              <Label layoutX="65.0" layoutY="54.0" text="ID1" />
-                              <Label layoutX="65.0" layoutY="109.0" text="ID2" />
-                              <Label layoutX="57.0" layoutY="156.0" text="Details" />
-                              <TextField layoutX="117.0" layoutY="50.0" prefHeight="25.0" prefWidth="543.0" promptText="Ex: 1" />
-                              <TextField layoutX="117.0" layoutY="105.0" prefHeight="25.0" prefWidth="543.0" promptText="Ex: 2" />
-                              <TextArea layoutX="117.0" layoutY="156.0" prefHeight="200.0" prefWidth="543.0" promptText="Distancia, Tempo" />
+                              <Button fx:id="buttonAdd" layoutY="371.0" mnemonicParsing="false" onAction="#handleButtonAdd" prefHeight="25.0" prefWidth="233.3" text="Add" />
+                              <Button fx:id="buttonEdit" layoutX="234.0" layoutY="371.0" mnemonicParsing="false" onAction="#handleButtonEdit" prefHeight="25.0" prefWidth="233.3" text="Edit" />
+                              <Button fx:id="buttonRemove" layoutX="468.0" layoutY="371.0" mnemonicParsing="false" onAction="#handleButtonRemove" prefHeight="25.0" prefWidth="233.3" text="Remove" />
+                              <Label layoutX="66.0" layoutY="33.0" text="ID1" />
+                              <Label layoutX="66.0" layoutY="88.0" text="ID2" />
+                              <Label layoutX="58.0" layoutY="142.0" text="Details" />
+                              <TextField fx:id="id1" layoutX="117.0" layoutY="29.0" prefHeight="25.0" prefWidth="543.0" promptText="Ex: 1" />
+                              <TextField fx:id="id2" layoutX="117.0" layoutY="84.0" prefHeight="25.0" prefWidth="543.0" promptText="Ex: 2" />
+                              <TextArea fx:id="details" layoutX="117.0" layoutY="142.0" prefHeight="200.0" prefWidth="543.0" promptText="Distancia, Tempo" />
                            </children></AnchorPane>
                     </content>
                   </Tab>
