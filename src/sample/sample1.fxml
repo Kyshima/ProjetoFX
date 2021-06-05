@@ -12,7 +12,8 @@
           <Menu mnemonicParsing="false" text="Menu">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#startMain" text="Start" />
-                  <MenuItem mnemonicParsing="false" onAction="#clearMain" text="Clear" />
+                  <MenuItem fx:id="butDist" mnemonicParsing="false" onAction="#createDist" text="Distancia" />
+                  <MenuItem fx:id="butTempo" mnemonicParsing="false" onAction="#createTempo" text="Tempo" />
             </items>
           </Menu>
         </menus>

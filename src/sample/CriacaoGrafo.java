@@ -189,19 +189,22 @@ public class CriacaoGrafo extends EdgeWeightedGraph {
     }
 
     public void edgesTemp(int[][] ligs, CriacaoGrafo gG, SequentialSearchST<Integer, Ligacoes> lig, int[] sizes){
-        int t = gG.V()-1;
-        int f = 10;
         int k;
-        for(int g = 1; g < t; g++){
-            for (int s = 0; s < f; s++){
-                if(ligs[g-1][s] != 0){
-                    //gG.addEdge(g-1, ligs[g-1][s]);
-                    for(k = 1; k < sizes[5]; k++)
-                        if((Integer.parseInt(lig.get(k).id_1.replace("geocache","")) == g-1) && (Integer.parseInt(lig.get(k).id_2.replace("geocache","")) == ligs[g-1][s]))
-                            break;
-                    Edge e = new Edge(g-1, ligs[g-1][s],lig.get(k).tempo);
-                    gG.addEdge(e);
+        // g percorre 18 geocaches
+        for(int g = 0; g < sizes[2]; g++){
+            //System.out.println("\n" + g);
+            // percorre enquanto existir informaçao
+            for (int s = 0; ligs[g][s] != 0; s++){
+                //System.out.print("\t" + s);
+                // de 1 a 50
+                for(k = 1; k < sizes[5]; k++) {
+                    //System.out.println((Integer.parseInt(lig.get(k).id_1.replace("geocache", "")) + " " + (g+1) + " " + (Integer.parseInt(lig.get(k).id_2.replace("geocache", "")) + " " + (ligs[g][s]))));
+                    if ((Integer.parseInt(lig.get(k).id_1.replace("geocache", "")) == g + 1) && (Integer.parseInt(lig.get(k).id_2.replace("geocache", "")) == ligs[g][s]))
+                        break;
                 }
+                //System.out.println("Acertou");
+                Edge e = new Edge(g, ligs[g][s]-1, lig.get(k).tempo);
+                gG.addEdge(e);
             }
         }
     }

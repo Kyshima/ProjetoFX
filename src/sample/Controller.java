@@ -63,9 +63,9 @@ public class Controller {
             for (Edge v : gG.adj(i)) {
                 //System.out.println(gG.getPositionsX(i) + " " + gG.getPositionsY(i) + " " + gG.getPositionsX(v.other(i)) + " " + gG.getPositionsY(v.other(i)));
                 Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v.other(i)), gG.getPositionsY(v.other(i)));
-                l.setStyle("-fx-stroke: lightgrey");
-                l.setStyle("-fx-opacity: 0.1");
 
+                l.setStyle("-fx-stroke: lightgrey");
+                l.setStyle("-fx-opacity: 0.2");
                 graphGroup.getChildren().add(l);
             }
         }
@@ -216,12 +216,6 @@ public class Controller {
             System.out.println(erro);
         }
 
-        gG = new CriacaoGrafo(sizes, geo_st, lig_st);
-        edges = gG.create_arraysLig(sizes, lig_st);
-        gG.edgesDist(edges, gG, lig_st, sizes);
-        //System.out.println(gG);
-        createGraphGroup();
-
     }
 
     public double getRadius() {
@@ -231,33 +225,42 @@ public class Controller {
     public void handleButtonAdd(javafx.event.ActionEvent actionEvent) {
         try {
             int flag = 1;
-            int t = 0;
+            int t = -1;
+            int s = Integer.parseInt(id1.getText().replace("geocache", ""));
             String u = id2.getText();
             if(!u.equals("")) t = Integer.parseInt(u.replace("geocache", ""));
-            int s = Integer.parseInt(id1.getText().replace("geocache", ""));
+
             //System.out.println(u + " " + s);
-            int existe = 0;
+            int existe1 = 0, existe2 = 0;
 
             int[][] lig = gG.getLigs();
 
-            if (t != 0) {           // Linhas
+            if (t != -1) {           // Linhas
                 for (int p = 1; p < sizes[2]; p++) {            // percorre as geocaches
                     if (p == s) {                               // quando acha a 1 geocache inserida
                         if (geo_st.contains(t)) {
                             for (int l = 0; lig[p][l] != 0; l++) {      //percorre array ligacoes
                                 if (lig[p][l] == t) {
-                                    existe++;
+                                    existe1++;
                                 }
                             }
-                            if (existe == 0) {
+                            if (existe1 == 0) {
                                 String[] lines = details.getText().split(";");
-                                float tempo = Float.parseFloat(lines[0]);
-                                double distancia = Double.parseDouble(lines[1]);
+                                int tempo = Integer.parseInt(lines[0]);
+                                float distancia = Float.parseFloat(lines[1]);
 
+                                Ligacoes n_lig = new Ligacoes();
+                                sizes[5]++;
+
+                                n_lig.id_1 = id1.getText();
+                                n_lig.id_2 = id2.getText();
+                                n_lig.tempo = tempo;
+                                n_lig.distancia = distancia;
+
+                                lig_st.put(sizes[5]-1, n_lig);
 
                                 flag = 2;
-                                /*Edge edge = new Edge(s - 1, t - 1, weight);
-                                gG.addEdge(edge);*/
+
                                 break;
                             }
 
@@ -265,26 +268,19 @@ public class Controller {
                     }
                 }
                     graphGroup.getChildren().clear();
+                    gG = null;
+                    gG = new CriacaoGrafo(sizes, geo_st, lig_st);
+                    int[][] array = gG.create_arraysLig(sizes, lig_st);
+                    gG.edgesDist(array, gG, lig_st, sizes);
                     createGraphGroup();
 
             } else {                // Vertices
                 for (int p = 1; p < sizes[2]; p++) {
                     if (p == s) {
-                        for (int l = 0; l < 10; l++) {
-                            String[] lines = details.getText().split("\n");
-                            for (String line : lines) {
-                                String[] position = line.split(";");
-                                int r = Integer.parseInt(position[0]);
-                                double weight = Double.parseDouble(position[1]);
-                                if (lig[p][l] != r) {
-                                    flag = 3;
-                                    Edge edge = new Edge(s - 1, r - 1, weight);
-                                    gG.addEdge(edge);
-                                }
-                            }
-                        }
+                        existe2++;
                     }
                 }
+
                 graphGroup.getChildren().clear();
                 createGraphGroup();
             }
@@ -309,8 +305,25 @@ public class Controller {
     public void handleButtonRemove(javafx.event.ActionEvent actionEvent) {
     }
 
-    public void clearMain(ActionEvent actionEvent) {
+    public void createDist(ActionEvent actionEvent) {
         graphGroup.getChildren().clear();
         gG = null;
+
+        gG = new CriacaoGrafo(sizes, geo_st, lig_st);
+        edges = gG.create_arraysLig(sizes, lig_st);
+        gG.edgesDist(edges, gG, lig_st, sizes);
+        //System.out.println(gG);
+        createGraphGroup();
+    }
+
+    public void createTempo(ActionEvent actionEvent) {
+        graphGroup.getChildren().clear();
+        gG = null;
+
+        gG = new CriacaoGrafo(sizes, geo_st, lig_st);
+        edges = gG.create_arraysLig(sizes, lig_st);
+        gG.edgesTemp(edges, gG, lig_st, sizes);
+        //System.out.println(gG);
+        createGraphGroup();
     }
 }
