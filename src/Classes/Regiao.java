@@ -1,6 +1,6 @@
-package edu.ufp.inf.lp2_aed2.projeto;
+package Classes;
 import edu.princeton.cs.algs4.*;
-import java.util.ArrayList;
+
 import java.lang.String;
 
 public class Regiao {

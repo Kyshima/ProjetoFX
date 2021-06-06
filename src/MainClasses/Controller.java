@@ -1,24 +1,21 @@
-package sample;
+package MainClasses;
 
+import Classes.*;
+import Classes.Date;
 import edu.princeton.cs.algs4.*;
-import edu.ufp.inf.lp2_aed2.projeto.*;
 
-import edu.ufp.inf.lp2_aed2.projeto.Date;
+import javafx.animation.KeyValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
@@ -27,13 +24,12 @@ import javafx.scene.paint.Color;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.Objects;
+import java.util.Locale;
 import java.util.Scanner;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TablePosition;
-import javafx.util.Callback;
 
 public class Controller {
     public Group graphGroup;
@@ -69,10 +65,6 @@ public class Controller {
     public String input = "";
 
     public double radius = 15;
-
-    public TextField idUserField;
-    public TextField nomeUserField;
-    public TextField tipoUserField;
 
     int[] sizes = new int[8];
     protected static final int GROUP_MARGIN = 10;
@@ -160,9 +152,7 @@ public class Controller {
         return item;
     }
 
-    public double getRadius() {
-        return radius;
-    }
+    public double getRadius() {return radius;}
 
     public void handleButtonAdd(javafx.event.ActionEvent actionEvent) {
         try {
@@ -255,11 +245,9 @@ public class Controller {
         }
     }
 
-    public void handleButtonEdit(ActionEvent actionEvent) {
-    }
+    public void handleButtonEdit(ActionEvent actionEvent) { }
 
-    public void handleButtonRemove(ActionEvent actionEvent) {
-    }
+    public void handleButtonRemove(ActionEvent actionEvent) { }
 
     public void createDist(ActionEvent actionEvent) {
         graphGroup.getChildren().clear();
@@ -293,6 +281,10 @@ public class Controller {
         gG.edgesDist(edges, gG, lig_st, sizes);
         createGraphGroup();
 
+        CreateTables();
+    }
+
+    public void CreateTables(){
         idUserCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         nomeUserCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
         tipoUserCol.setCellValueFactory(new PropertyValueFactory<>("tipo"));
@@ -323,37 +315,42 @@ public class Controller {
         addAndEditItens();
     }
 
-    public void addAndEditUser(){
-        userTable.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-
-            if( event.getCode() == KeyCode.ENTER) {
-                //System.out.println(input);
-                editPosUser();
-                input = "";
-                return;
-            }
-
-            if(userTable.getEditingCell() == null) {
-                if(event.getCode().isLetterKey() || event.getCode().isDigitKey()) {
+    public void addAndEditUser() {
+        userTable.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+            if (userTable.getEditingCell() == null) {
+                System.out.println(2);
+                if (event.getCode().isLetterKey() || event.getCode().isDigitKey()) {
+                    System.out.println(input);
                     input = input + event.getText();
                 }
-            }
-        });
-
-        userTable.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
-
-            if(event.getCode() == KeyCode.ENTER && input.equals("")) {
+            } else if (event.getCode() == KeyCode.ENTER && !input.equals("")) {
+                System.out.println(1);
+                System.out.println(input);
+                editPosUser();
+                input = "";
+            } else if (event.getCode() == KeyCode.ENTER && input.equals("")) {
+                System.out.println(3);
                 TablePosition pos = userTable.getFocusModel().getFocusedCell();
-
                 if (pos.getRow() == -1) {
                     userTable.getSelectionModel().select(0);
-                } else if (pos.getRow() == userTable.getItems().size() -1) {
+                } else if (pos.getRow() == userTable.getItems().size() - 1) {
                     addRowUser();
-                } else if (pos.getRow() < userTable.getItems().size() -1) {
-                    userTable.getSelectionModel().clearAndSelect( pos.getRow() + 1, pos.getTableColumn());
+                } else if (pos.getRow() < userTable.getItems().size() - 1) {
+                    String col = pos.getTableColumn().getId();
+                    switch (col) {
+                        case "idUserCol":
+                            userTable.getSelectionModel().clearAndSelect(pos.getRow(), nomeUserCol);
+                            break;
+                        case "nomeUserCol":
+                            userTable.getSelectionModel().clearAndSelect(pos.getRow(), tipoUserCol);
+                            break;
+                        case "tipoUserCol":
+                            userTable.getSelectionModel().clearAndSelect(pos.getRow() + 1, idUserCol);
+                            break;
+                    }
                 }
-            }
-            if(event.getCode() == KeyCode.DELETE){
+            } else if (event.getCode() == KeyCode.DELETE) {
+                System.out.println(4);
                 TablePosition pos = userTable.getFocusModel().getFocusedCell();
 
                 if (pos.getRow() == -1) {
@@ -362,12 +359,73 @@ public class Controller {
                     removeSelectedRowsUser();
                 }
             }
+            userTable.getSelectionModel().setCellSelectionEnabled(true);
+            userTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            userTable.getSelectionModel().selectFirst();
+        });
+    }
+        /*userTable.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+            System.out.println(KeyEvent.KEY_TYPED.hashCode());
+
+            // Para quanquer tecla
+            if(userTable.getEditingCell() == null) {
+                System.out.println(2);
+                if(event.getCode().isLetterKey() || event.getCode().isDigitKey()) {
+                    System.out.println(input);
+                    input = input + event.getText();
+                }
+                return;
+            }
+
+            // Se for carregado no enter depois do input
+            if( event.getCode() == KeyCode.ENTER && !input.equals("")) {
+                System.out.println(1);
+                System.out.println(input);
+                editPosUser();
+                input = "";
+                return;
+            }
+
+            // Se for carregado no enter antes do input
+            if(event.getCode() == KeyCode.ENTER && input.equals("")) {
+                System.out.println(3);
+                TablePosition pos = userTable.getFocusModel().getFocusedCell();
+                if (pos.getRow() == -1) {
+                    userTable.getSelectionModel().select(0);
+                } else if (pos.getRow() == userTable.getItems().size() -1) {
+                    addRowUser();
+                } else if (pos.getRow() < userTable.getItems().size() -1) {
+                    String col = pos.getTableColumn().getId();
+                    switch(col){
+                        case "idUserCol": userTable.getSelectionModel().clearAndSelect( pos.getRow(),nomeUserCol);
+                        break;
+                        case "nomeUserCol": userTable.getSelectionModel().clearAndSelect( pos.getRow(),tipoUserCol);
+                        break;
+                        case "tipoUserCol": userTable.getSelectionModel().clearAndSelect( pos.getRow() + 1,idUserCol);
+                        break;
+                    }
+                }
+                return;
+            }
+
+            // Para Remover DELETE
+            if(event.getCode() == KeyCode.DELETE){
+                System.out.println(4);
+                TablePosition pos = userTable.getFocusModel().getFocusedCell();
+
+                if (pos.getRow() == -1) {
+                    userTable.getSelectionModel().select(0);
+                } else {
+                    removeSelectedRowsUser();
+                }
+                return;
+            }
         });
 
         userTable.getSelectionModel().setCellSelectionEnabled(true);
         userTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         userTable.getSelectionModel().selectFirst();
-    }
+    }*/
 
     public void addRowUser() {
         TablePosition pos = userTable.getFocusModel().getFocusedCell();
@@ -375,27 +433,44 @@ public class Controller {
         User user = new User(0,"0","0");
         userTable.getItems().add(user);
         int row = userTable.getItems().size() - 1;
-        userTable.getSelectionModel().select( row, pos.getTableColumn());
+        userTable.getSelectionModel().select( row + 1, pos.getTableColumn());
         userTable.scrollTo(user);
     }
 
     public void editPosUser() {
-        TablePosition pos = userTable.getFocusModel().getFocusedCell();
-        int r = pos.getRow();
+        int r = userTable.getFocusModel().getFocusedCell().getRow();
+        String c = userTable.getFocusModel().getFocusedCell().getTableColumn().getId();
         User user;
-        switch(pos.getColumn()){
-            case 0: user = new User(Integer.parseInt(input),user_st.get(r+1).nome,user_st.get(r+1).tipo);
+        switch(c){
+            case "idUserCol":
+                    for(int i=0; i < sizes[0]; i++){
+                        if(user_st.get(i) != null && userTable.getItems().get(r).id == user_st.get(i).id){
+                            user_st.get(i).id = Integer.parseInt(input);
+                            break;
+                        }
+                    }
                     break;
-            case 1: user = new User(user_st.get(r+1).id,input,user_st.get(r+1).tipo);
-                    break;
-            case 2: user = new User(user_st.get(r+1).id,user_st.get(r+1).nome,input);
-                    break;
-            default: user = new User(0,"0","0");
+            case "nomeUserCol": for(int i=0; i < sizes[0]; i++){
+                                    if(user_st.get(i) != null && userTable.getItems().get(r).id == user_st.get(i).id){
+                                    user_st.get(i).nome = input;
+                                    break;
+                                    }
+                                }
+                                break;
+            case "tipoUserCol": for(int i=0; i < sizes[0]; i++){
+                                    if(user_st.get(i) != null && userTable.getItems().get(r).id == user_st.get(i).id){
+                                    user_st.get(i).tipo = input;
+                                    break;
+                                    }
+                                }
+                                break;
+            default: user = new User(0,"","");
         }
-        userTable.getItems().add(user);
+        /*userTable.getItems().add(user);
         userTable.getSelectionModel().select( r, pos.getTableColumn());
-        removeSelectedRowsUser();
-        userTable.scrollTo(user);
+        removeSelectedRowsUser();*/
+        CreateTables();
+        //userTable.scrollTo(user);
     }
 
     public void removeSelectedRowsUser() {
@@ -656,6 +731,7 @@ public class Controller {
     }
 
     public void lerFile(){
+        // sizes = n_user, n_reg, n_geo,n_itens, n_tv, n_lig, n_visitado, n_histTB;
         for (int i = 0; i < 8; i++) sizes[i] = 0;
         // Leitura do ficheiro input.txt
         try {

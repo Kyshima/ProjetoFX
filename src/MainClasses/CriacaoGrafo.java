@@ -1,10 +1,8 @@
-package sample;
+package MainClasses;
 
 import edu.princeton.cs.algs4.*;
-import edu.ufp.inf.lp2_aed2.projeto.Geocache;
-import edu.ufp.inf.lp2_aed2.projeto.Ligacoes;
-
-import java.util.Arrays;
+import Classes.Geocache;
+import Classes.Ligacoes;
 
 import static java.lang.Math.*;
 
