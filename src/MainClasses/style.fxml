@@ -128,7 +128,6 @@
                                                 <TextField fx:id="geoIdRegField" layoutX="450.0" layoutY="369.0" prefHeight="25.0" prefWidth="112.2" promptText="ID Regiao" />
                                                 <Button fx:id="addGeocacheButton" layoutX="88.0" layoutY="394.0" mnemonicParsing="false" onAction="#addGeocache" prefHeight="25.0" prefWidth="164.0" text="Add/Edit" />
                                              </children>
-
                                           </AnchorPane>
                                       </content>
                                     </Tab>

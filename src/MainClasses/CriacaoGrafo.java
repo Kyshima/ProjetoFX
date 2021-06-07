@@ -21,7 +21,6 @@ public class CriacaoGrafo extends EdgeWeightedGraph {
         setPositions(x[2], geo);
     }
 
-
     public CriacaoGrafo(CriacaoGrafo gG) {
         super(gG.V());
         positionsX = gG.positionsX;
