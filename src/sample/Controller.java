@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.prism.paint.Paint;
 import edu.princeton.cs.algs4.*;
 import edu.ufp.inf.lp2_aed2.projeto.*;
 
@@ -24,6 +25,8 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
+
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -40,7 +43,8 @@ public class Controller {
 
     public TextField id1;
     public TextField id2;
-    public TextArea details;
+    public TextField distField;
+    public TextField tempoField;
 
     public TableView<User> userTable;
     public TableColumn<User, Integer> idUserCol;
@@ -66,13 +70,25 @@ public class Controller {
     public TableColumn<Item, String> nomeItensCol;
 
     public int[][] edges;
+    public int[][] edges_prem;
+    public int[][] edges_basic;
+
     public String input = "";
 
     public double radius = 15;
 
-    public TextField idUserField;
-    public TextField nomeUserField;
-    public TextField tipoUserField;
+    public TextField userIdField;
+    public TextField userNomeField;
+    public TextField userTipoField;
+
+    public TextField regIdField;
+    public TextField regNomeField;
+    public TextField geoIdField;
+    public TextField geoTipoField;
+    public TextField cXField;
+    public TextField cYField;
+    public TextField geoIdRegField;
+
 
     int[] sizes = new int[8];
     protected static final int GROUP_MARGIN = 10;
@@ -87,10 +103,12 @@ public class Controller {
 
     private CriacaoGrafo gG;
 
-    public void createGraphGroup() {
-        for (int i = 0; i < gG.V(); i++) {
-            for (Edge v : gG.adj(i)) {
-                Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v.other(i)), gG.getPositionsY(v.other(i)));
+    public void createGraphGroup() {        //Regiao Butao
+        graphGroup.getChildren().clear();
+
+        for (int i = 1; i < gG.V(); i++) {
+            for (Edge v : gG.adj(i-1)) {
+                Line l = new Line(gG.getPositionsX(i-1), gG.getPositionsY(i-1), gG.getPositionsX(v.other(i-1)), gG.getPositionsY(v.other(i-1)));
 
                 l.setStyle("-fx-stroke-width: " + v.weight());
                 graphGroup.getChildren().add(l);
@@ -99,9 +117,17 @@ public class Controller {
 
         for (int i = 0; i < gG.V(); i++) {
             Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.LIGHTBLUE);
-            Text id = new Text(" " + (i + 1));
-            if (geo_st.get(i) != null && geo_st.get(i).tipo.equals("premium")) {
-                c.setFill(Color.LIGHTPINK);
+            Text id = new Text(" " + (i+1));
+            if (geo_st.get(i+1) != null) {
+                if (geo_st.get(i+1).id_reg == 1){
+                    c.setFill(Color.web("FF5959"));
+                } else if (geo_st.get(i+1).id_reg == 2) {
+                    c.setFill(Color.web("#FACF5A"));
+                } else if (geo_st.get(i+1).id_reg == 3) {
+                    c.setFill(Color.web("#49BEB7"));
+                } else {
+                    c.setFill(Color.web("085F63"));
+                }
             }
 
             StackPane sp = new StackPane();
@@ -109,6 +135,85 @@ public class Controller {
             sp.setLayoutY(gG.getPositionsY(i) - radius);
             sp.getChildren().addAll(c, id);
             graphGroup.getChildren().add(sp);
+        }
+    }
+
+    public void createGraphGroup_PremBasic() {           //Premium/Basic Butao
+        graphGroup.getChildren().clear();
+        for (int i = 0; i < gG.V(); i++) {
+            for (Edge v : gG.adj(i)) {
+                Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v.other(i)), gG.getPositionsY(v.other(i)));
+
+                l.setStyle("-fx-stroke-width: " + v.weight());
+                graphGroup.getChildren().add(l);
+            }
+        }
+        for (int i = 0; i < gG.V(); i++) {
+            Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.web("#49BEB7",1));
+            Text id = new Text(" " + (i + 1));
+
+            if (geo_st.get(i+1) != null && geo_st.get(i+1).tipo.equals("premium")) {
+                c.setFill(Color.web("FF5959"));
+            }
+
+
+            StackPane sp = new StackPane();
+            sp.setLayoutX(gG.getPositionsX(i) - radius);
+            sp.setLayoutY(gG.getPositionsY(i) - radius);
+            sp.getChildren().addAll(c, id);
+            graphGroup.getChildren().add(sp);
+        }
+    }
+
+    public void createGraphGroup_Basic(ActionEvent actionEvent) {
+        graphGroup.getChildren().clear();
+        for (int i = 0; i < gG.V(); i++) {
+            for (Edge v : gG.adj(i)) {
+                if(geo_st.get(v.other(i)+1) != null && geo_st.get(i+1) != null && geo_st.get(v.other(i)+1).tipo.equals("basic") && geo_st.get(i+1).tipo.equals("basic")){
+                    Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v.other(i)), gG.getPositionsY(v.other(i)));
+                    l.setStyle("-fx-stroke-width: " + v.weight());
+                    graphGroup.getChildren().add(l);
+                }
+            }
+        }
+
+        for (int i = 0; i < gG.V(); i++) {
+            if(geo_st.get(i+1) != null && geo_st.get(i+1).tipo.equals("basic")) {
+                Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.web("#49BEB7"));
+                Text id = new Text(" " + (i + 1));
+
+            StackPane sp = new StackPane();
+            sp.setLayoutX(gG.getPositionsX(i) - radius);
+            sp.setLayoutY(gG.getPositionsY(i) - radius);
+            sp.getChildren().addAll(c, id);
+            graphGroup.getChildren().add(sp);
+        }
+    }
+    }
+
+    public void createGraphGroup_Prem(ActionEvent actionEvent) {
+        graphGroup.getChildren().clear();
+        for (int i = 0; i < gG.V(); i++) {
+            for (Edge v : gG.adj(i)) {
+                if(geo_st.get(v.other(i)+1) != null && geo_st.get(i+1) != null && geo_st.get(v.other(i)+1).tipo.equals("premium") && geo_st.get(i+1).tipo.equals("premium")){
+                    Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v.other(i)), gG.getPositionsY(v.other(i)));
+                    l.setStyle("-fx-stroke-width: " + v.weight());
+                    graphGroup.getChildren().add(l);
+                }
+            }
+        }
+
+        for (int i = 0; i < gG.V(); i++) {
+            if(geo_st.get(i+1) != null && geo_st.get(i+1).tipo.equals("premium")) {
+                Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.web("FF5959"));
+                Text id = new Text(" " + (i + 1));
+
+                StackPane sp = new StackPane();
+                sp.setLayoutX(gG.getPositionsX(i) - radius);
+                sp.setLayoutY(gG.getPositionsY(i) - radius);
+                sp.getChildren().addAll(c, id);
+                graphGroup.getChildren().add(sp);
+            }
         }
     }
 
@@ -120,42 +225,52 @@ public class Controller {
         }
     }
 
-    public ObservableList<User> userOL(){
+    public ObservableList<User> userOL() {
+        int s = sizes[0];
         ObservableList<User> user = FXCollections.observableArrayList();
-        for(int i = 1; i <= sizes[0]; i++){
-            if(user_st.get(i) != null){
+        for (int i = 1; i <= s; i++) {
+            if (user_st.get(i) != null) {
                 user.add(new User(user_st.get(i).getId(), user_st.get(i).nome, user_st.get(i).tipo));
             }
+            else s++;
+
+
         }
         return user;
     }
 
-    public ObservableList<Regiao> regOL(){
+    public ObservableList<Regiao> regOL() {
+        int s = sizes[1];
         ObservableList<Regiao> reg = FXCollections.observableArrayList();
-        for(int i = 1; i <= sizes[1]; i++){
-            if(reg_st.get(i) != null){
+        for (int i = 1; i <= s; i++) {
+            if (reg_st.get(i) != null) {
                 reg.add(new Regiao(reg_st.get(i).getId(), reg_st.get(i).nome, reg_st.get(i).getN_caches()));
             }
+            else s++;
         }
         return reg;
     }
 
-    public ObservableList<Geocache> geoOL(){
+    public ObservableList<Geocache> geoOL() {
+        int s = sizes[2];
         ObservableList<Geocache> geo = FXCollections.observableArrayList();
-        for(int i = 0; i <= sizes[2]; i++){
-            if(geo_st.get(i) != null){
-                geo.add(new Geocache(geo_st.get(i).id,geo_st.get(i).tipo,geo_st.get(i).coordenadasX,geo_st.get(i).coordenadasY,geo_st.get(i).n_itens,geo_st.get(i).getId_reg()));
+        for (int i = 1; i <= s; i++) {
+            if (geo_st.get(i) != null) {
+                geo.add(new Geocache(geo_st.get(i).id, geo_st.get(i).tipo, geo_st.get(i).coordenadasX, geo_st.get(i).coordenadasY, geo_st.get(i).n_itens, geo_st.get(i).getId_reg()));
             }
+            else s++;
         }
         return geo;
     }
 
-    public ObservableList<Item> itemOL(){
+    public ObservableList<Item> itemOL() {
         ObservableList<Item> item = FXCollections.observableArrayList();
-        for(int i = 0; i <= sizes[3]; i++){
-            if(item_st.get(i) != null){
+        int s = sizes[3];
+        for (int i = 1; i <= s; i++) {
+            if (item_st.get(i) != null) {
                 item.add(new Item(item_st.get(i).getId(), item_st.get(i).getId_geo(), item_st.get(i).item));
             }
+            else s++;
         }
         return item;
     }
@@ -170,10 +285,10 @@ public class Controller {
             int t = -1;
             int s = Integer.parseInt(id1.getText().replace("geocache", ""));
             String u = id2.getText();
-            if(!u.equals("")) t = Integer.parseInt(u.replace("geocache", ""));
+            if (!u.equals("")) t = Integer.parseInt(u.replace("geocache", ""));
 
             //System.out.println(u + " " + s);
-            int existe1 = 0, existe2 = 0;
+            int existe1 = 0;
 
             int[][] lig = gG.getLigs();
 
@@ -187,9 +302,11 @@ public class Controller {
                                 }
                             }
                             if (existe1 == 0) {
-                                String[] lines = details.getText().split(";");
+                                /*String[] lines = details.getText().split(";");
                                 int tempo = Integer.parseInt(lines[0]);
-                                float distancia = Float.parseFloat(lines[1]);
+                                float distancia = Float.parseFloat(lines[1]);*/
+                                int tempo = Integer.parseInt(tempoField.getText());
+                                float distancia = Float.parseFloat(distField.getText());
 
                                 Ligacoes n_lig = new Ligacoes();
                                 sizes[5]++;
@@ -199,7 +316,7 @@ public class Controller {
                                 n_lig.tempo = tempo;
                                 n_lig.distancia = distancia;
 
-                                lig_st.put(sizes[5]-1, n_lig);
+                                lig_st.put(sizes[5] - 1, n_lig);
 
                                 flag = 3;
 
@@ -209,42 +326,15 @@ public class Controller {
                         }
                     }
                 }
-                    graphGroup.getChildren().clear();
-                    gG = null;
-                    gG = new CriacaoGrafo(sizes, geo_st, lig_st);
-                    int[][] array = gG.create_arraysLig(sizes, lig_st);
-                    gG.edgesDist(array, gG, lig_st, sizes);
-                    createGraphGroup();
-
-            } else {                // Vertices
-                for (int p = 1; p < sizes[2]; p++) {
-                    if(!geo_st.contains(s)){
-                        Geocache geo = new Geocache();
-                        String[] lines = details.getText().split(";");
-                        geo.id = id1.getText();
-                        geo.tipo = lines[0];
-                        geo.coordenadasX = Float.parseFloat(lines[1]);
-                        geo.coordenadasY = Float.parseFloat(lines[2]);
-                        geo.n_itens = Integer.parseInt(lines[3]);
-                        geo.id_reg = Integer.parseInt(lines[4]);
-                        sizes[2]++;
-                        geo_st.put(sizes[2], geo);
-                        flag = 2;
-                        break;
-                    }
-                }
                 graphGroup.getChildren().clear();
                 gG = null;
                 gG = new CriacaoGrafo(sizes, geo_st, lig_st);
                 int[][] array = gG.create_arraysLig(sizes, lig_st);
                 gG.edgesDist(array, gG, lig_st, sizes);
                 createGraphGroup();
-            }
-            if (flag == 2) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Vertice Adicionado", ButtonType.CLOSE);
-                alert.showAndWait();
-            } else if (flag == 3) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Edges Adicionados", ButtonType.CLOSE);
+
+            }if (flag == 3) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Edge Adicionada", ButtonType.CLOSE);
                 alert.showAndWait();
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Vertice nao Existe", ButtonType.CLOSE);
@@ -267,6 +357,8 @@ public class Controller {
 
         gG = new CriacaoGrafo(sizes, geo_st, lig_st);
         edges = gG.create_arraysLig(sizes, lig_st);
+        edges_basic = gG.create_arraysLig_Basic(sizes,lig_st,geo_st);
+        edges_prem = gG.create_arraysLig_Prem(sizes,lig_st,geo_st);
         gG.edgesDist(edges, gG, lig_st, sizes);
         createGraphGroup();
     }
@@ -277,11 +369,13 @@ public class Controller {
 
         gG = new CriacaoGrafo(sizes, geo_st, lig_st);
         edges = gG.create_arraysLig(sizes, lig_st);
+        edges_basic = gG.create_arraysLig_Basic(sizes,lig_st,geo_st);
+        edges_prem = gG.create_arraysLig_Prem(sizes,lig_st,geo_st);
         gG.edgesTemp(edges, gG, lig_st, sizes);
         createGraphGroup();
     }
 
-    public void startMain(javafx.event.ActionEvent actionEvent) {
+    public void startMain(ActionEvent actionEvent) {
 
         lerFile();
 
@@ -293,6 +387,10 @@ public class Controller {
         gG.edgesDist(edges, gG, lig_st, sizes);
         createGraphGroup();
 
+        createTables();
+    }
+
+    private void createTables() {
         idUserCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         nomeUserCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
         tipoUserCol.setCellValueFactory(new PropertyValueFactory<>("tipo"));
@@ -317,43 +415,36 @@ public class Controller {
         nomeItensCol.setCellValueFactory(new PropertyValueFactory<>("item"));
         itemTable.setItems(itemOL());
 
-        addAndEditUser();
-        addAndEditReg();
-        addAndEditGeo();
-        addAndEditItens();
     }
 
-    public void addAndEditUser(){
+    public void addAndEditUser() {
         userTable.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-
-            if( event.getCode() == KeyCode.ENTER) {
-                //System.out.println(input);
-                editPosUser();
-                input = "";
-                return;
-            }
-
-            if(userTable.getEditingCell() == null) {
-                if(event.getCode().isLetterKey() || event.getCode().isDigitKey()) {
+            if (userTable.getEditingCell() == null) {
+                if (event.getCode().isLetterKey() || event.getCode().isDigitKey()) {
+                    System.out.print(input + "\t");
                     input = input + event.getText();
+                    System.out.println(input);
                 }
             }
-        });
 
-        userTable.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
 
-            if(event.getCode() == KeyCode.ENTER && input.equals("")) {
+            if (event.getCode() == KeyCode.ENTER && !input.equals("")) {
+                //System.out.println(input);
+                //editPosUser();
+                System.out.println(input);
+            }
+            if (event.getCode() == KeyCode.HOME && input.equals("")) {
                 TablePosition pos = userTable.getFocusModel().getFocusedCell();
 
                 if (pos.getRow() == -1) {
                     userTable.getSelectionModel().select(0);
-                } else if (pos.getRow() == userTable.getItems().size() -1) {
-                    addRowUser();
-                } else if (pos.getRow() < userTable.getItems().size() -1) {
-                    userTable.getSelectionModel().clearAndSelect( pos.getRow() + 1, pos.getTableColumn());
+                } else if (pos.getRow() == userTable.getItems().size() - 1) {
+                    //addRowUser();
+                } else if (pos.getRow() < userTable.getItems().size() - 1) {
+                    userTable.getSelectionModel().clearAndSelect(pos.getRow() + 1, pos.getTableColumn());
                 }
             }
-            if(event.getCode() == KeyCode.DELETE){
+            if (event.getCode() == KeyCode.DELETE) {
                 TablePosition pos = userTable.getFocusModel().getFocusedCell();
 
                 if (pos.getRow() == -1) {
@@ -367,35 +458,7 @@ public class Controller {
         userTable.getSelectionModel().setCellSelectionEnabled(true);
         userTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         userTable.getSelectionModel().selectFirst();
-    }
 
-    public void addRowUser() {
-        TablePosition pos = userTable.getFocusModel().getFocusedCell();
-        userTable.getSelectionModel().clearSelection();
-        User user = new User(0,"0","0");
-        userTable.getItems().add(user);
-        int row = userTable.getItems().size() - 1;
-        userTable.getSelectionModel().select( row, pos.getTableColumn());
-        userTable.scrollTo(user);
-    }
-
-    public void editPosUser() {
-        TablePosition pos = userTable.getFocusModel().getFocusedCell();
-        int r = pos.getRow();
-        User user;
-        switch(pos.getColumn()){
-            case 0: user = new User(Integer.parseInt(input),user_st.get(r+1).nome,user_st.get(r+1).tipo);
-                    break;
-            case 1: user = new User(user_st.get(r+1).id,input,user_st.get(r+1).tipo);
-                    break;
-            case 2: user = new User(user_st.get(r+1).id,user_st.get(r+1).nome,input);
-                    break;
-            default: user = new User(0,"0","0");
-        }
-        userTable.getItems().add(user);
-        userTable.getSelectionModel().select( r, pos.getTableColumn());
-        removeSelectedRowsUser();
-        userTable.scrollTo(user);
     }
 
     public void removeSelectedRowsUser() {
@@ -403,259 +466,7 @@ public class Controller {
         userTable.getSelectionModel().clearSelection();
     }
 
-    public void addAndEditReg(){
-        regTable.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-
-            if( event.getCode() == KeyCode.ENTER) {
-                //System.out.println(input);
-                editPosReg();
-                input = "";
-                return;
-            }
-
-            if(regTable.getEditingCell() == null) {
-                if(event.getCode().isLetterKey() || event.getCode().isDigitKey()) {
-                    input = input + event.getText();
-                }
-            }
-        });
-
-        regTable.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
-
-            if(event.getCode() == KeyCode.ENTER && input.equals("")) {
-                TablePosition pos = regTable.getFocusModel().getFocusedCell();
-
-                if (pos.getRow() == -1) {
-                    regTable.getSelectionModel().select(0);
-                } else if (pos.getRow() == regTable.getItems().size() -1) {
-                    addRowReg();
-                } else if (pos.getRow() < regTable.getItems().size() -1) {
-                    regTable.getSelectionModel().clearAndSelect( pos.getRow() + 1, pos.getTableColumn());
-                }
-            }
-            if(event.getCode() == KeyCode.DELETE){
-                TablePosition pos = userTable.getFocusModel().getFocusedCell();
-
-                if (pos.getRow() == -1) {
-                    userTable.getSelectionModel().select(0);
-                } else {
-                    removeSelectedRowsReg();
-                }
-            }
-        });
-
-        regTable.getSelectionModel().setCellSelectionEnabled(true);
-        regTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        regTable.getSelectionModel().selectFirst();
-    }
-
-    public void addRowReg() {
-        TablePosition pos = regTable.getFocusModel().getFocusedCell();
-        regTable.getSelectionModel().clearSelection();
-        Regiao reg = new Regiao(0,"0",0);
-        regTable.getItems().add(reg);
-        int row = regTable.getItems().size() - 1;
-        regTable.getSelectionModel().select( row, pos.getTableColumn());
-        regTable.scrollTo(reg);
-    }
-
-    public void editPosReg() {
-        TablePosition pos = regTable.getFocusModel().getFocusedCell();
-        int r = pos.getRow();
-        Regiao reg;
-        switch(pos.getColumn()){
-            case 0: reg = new Regiao(Integer.parseInt(input),reg_st.get(r+1).nome,reg_st.get(r+1).n_caches);
-                break;
-            case 1: reg = new Regiao(reg_st.get(r+1).id,input,reg_st.get(r+1).n_caches);
-                break;
-            case 2: reg = new Regiao(reg_st.get(r+1).id,reg_st.get(r+1).nome,Integer.parseInt(input));
-                break;
-            default: reg = new Regiao(0,"0",0);
-        }
-        regTable.getItems().add(reg);
-        regTable.getSelectionModel().select( r, pos.getTableColumn());
-        removeSelectedRowsReg();
-        regTable.scrollTo(reg);
-    }
-
-    public void removeSelectedRowsReg() {
-        regTable.getItems().removeAll(regTable.getSelectionModel().getSelectedItems());
-        regTable.getSelectionModel().clearSelection();
-    }
-
-    public void addAndEditGeo(){
-        geoTable.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-
-            if( event.getCode() == KeyCode.ENTER) {
-                //System.out.println(input);
-                editPosGeo();
-                input = "";
-                return;
-            }
-
-            if(geoTable.getEditingCell() == null) {
-                if(event.getCode().isLetterKey() || event.getCode().isDigitKey()) {
-                    input = input + event.getText();
-                }
-            }
-        });
-
-        geoTable.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
-
-            if(event.getCode() == KeyCode.ENTER && input.equals("")) {
-                TablePosition pos = geoTable.getFocusModel().getFocusedCell();
-
-                if (pos.getRow() == -1) {
-                    geoTable.getSelectionModel().select(0);
-                } else if (pos.getRow() == geoTable.getItems().size() -1) {
-                    addRowGeo();
-                } else if (pos.getRow() < geoTable.getItems().size() -1) {
-                    geoTable.getSelectionModel().clearAndSelect( pos.getRow() + 1, pos.getTableColumn());
-                }
-            }
-            if(event.getCode() == KeyCode.DELETE){
-                TablePosition pos = geoTable.getFocusModel().getFocusedCell();
-
-                if (pos.getRow() == -1) {
-                    geoTable.getSelectionModel().select(0);
-                } else {
-                    removeSelectedRowsGeo();
-                }
-            }
-        });
-
-        geoTable.getSelectionModel().setCellSelectionEnabled(true);
-        geoTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        geoTable.getSelectionModel().selectFirst();
-    }
-
-    public void addRowGeo() {
-        TablePosition pos = geoTable.getFocusModel().getFocusedCell();
-        geoTable.getSelectionModel().clearSelection();
-        Geocache geocache = new Geocache("geocache", "0", 0.0f, 0.0f, 0,0);
-        geoTable.getItems().add(geocache);
-        int row = geoTable.getItems().size() - 1;
-        geoTable.getSelectionModel().select( row, pos.getTableColumn());
-        geoTable.scrollTo(geocache);
-    }
-
-    public void editPosGeo() {
-        TablePosition pos = geoTable.getFocusModel().getFocusedCell();
-        int r = pos.getRow();
-        Geocache geo;
-        switch(pos.getColumn()){
-            case 0: geo = new Geocache("geocache"+Integer.parseInt(input),geo_st.get(r+1).tipo,
-                    geo_st.get(r+1).coordenadasX,geo_st.get(r+1).coordenadasY,geo_st.get(r+1).id_reg, geo_st.get(r+1).n_itens);
-                break;
-            case 1: geo = new Geocache(geo_st.get(r+1).id,input,
-                    geo_st.get(r+1).coordenadasX,geo_st.get(r+1).coordenadasY,geo_st.get(r+1).id_reg, geo_st.get(r+1).n_itens);
-                break;
-            case 2: geo = new Geocache(geo_st.get(r+1).id,geo_st.get(r+1).tipo,
-                    Float.parseFloat(input),geo_st.get(r+1).coordenadasY,geo_st.get(r+1).id_reg, geo_st.get(r+1).n_itens);
-                break;
-            case 3: geo = new Geocache(geo_st.get(r+1).id,geo_st.get(r+1).tipo,
-                    geo_st.get(r+1).coordenadasX,Float.parseFloat(input),geo_st.get(r+1).id_reg, geo_st.get(r+1).n_itens);
-                break;
-            case 4: geo = new Geocache(geo_st.get(r+1).id,geo_st.get(r+1).tipo,
-                    geo_st.get(r+1).coordenadasX,geo_st.get(r+1).coordenadasY,Integer.parseInt(input), geo_st.get(r+1).n_itens);
-                break;
-            case 5: geo = new Geocache(geo_st.get(r+1).id,geo_st.get(r+1).tipo,
-                    geo_st.get(r+1).coordenadasX,geo_st.get(r+1).coordenadasY,geo_st.get(r+1).id_reg, Integer.parseInt(input));
-                break;
-            default: geo = new Geocache("geocache0", "0", 0.0f, 0.0f, 0,0);
-        }
-        geoTable.getItems().add(geo);
-        geoTable.getSelectionModel().select( r, pos.getTableColumn());
-        removeSelectedRowsReg();
-        geoTable.scrollTo(geo);
-    }
-
-    public void removeSelectedRowsGeo() {
-        geoTable.getItems().removeAll(geoTable.getSelectionModel().getSelectedItems());
-        geoTable.getSelectionModel().clearSelection();
-    }
-
-    public void addAndEditItens(){
-        itemTable.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-
-            if( event.getCode() == KeyCode.ENTER) {
-                //System.out.println(input);
-                editPosItens();
-                input = "";
-                return;
-            }
-
-            if(itemTable.getEditingCell() == null) {
-                if(event.getCode().isLetterKey() || event.getCode().isDigitKey()) {
-                    input = input + event.getText();
-                }
-            }
-        });
-
-        itemTable.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
-
-            if(event.getCode() == KeyCode.ENTER && input.equals("")) {
-                TablePosition pos = itemTable.getFocusModel().getFocusedCell();
-
-                if (pos.getRow() == -1) {
-                    itemTable.getSelectionModel().select(0);
-                } else if (pos.getRow() == itemTable.getItems().size() -1) {
-                    addRowItens();
-                } else if (pos.getRow() < itemTable.getItems().size() -1) {
-                    itemTable.getSelectionModel().clearAndSelect( pos.getRow() + 1, pos.getTableColumn());
-                }
-            }
-            if(event.getCode() == KeyCode.DELETE){
-                TablePosition pos = itemTable.getFocusModel().getFocusedCell();
-
-                if (pos.getRow() == -1) {
-                    itemTable.getSelectionModel().select(0);
-                } else {
-                    removeSelectedRowsItens();
-                }
-            }
-        });
-
-        itemTable.getSelectionModel().setCellSelectionEnabled(true);
-        itemTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        itemTable.getSelectionModel().selectFirst();
-    }
-
-    public void addRowItens() {
-        TablePosition pos = itemTable.getFocusModel().getFocusedCell();
-        itemTable.getSelectionModel().clearSelection();
-        Item item = new Item(0,"geocache0","");
-        itemTable.getItems().add(item);
-        int row = itemTable.getItems().size() - 1;
-        itemTable.getSelectionModel().select( row, pos.getTableColumn());
-        itemTable.scrollTo(item);
-    }
-
-    public void editPosItens() {
-        TablePosition pos = itemTable.getFocusModel().getFocusedCell();
-        int r = pos.getRow();
-        Item item;
-        switch(pos.getColumn()){
-            case 0: item = new Item(Integer.parseInt(input),item_st.get(r+1).id_geo,item_st.get(r+1).item);
-                break;
-            case 1: item = new Item(item_st.get(r+1).id,"geocache"+Integer.parseInt(input),item_st.get(r+1).item);
-                break;
-            case 2: item = new Item(item_st.get(r+1).id,item_st.get(r+1).id_geo,input);
-                break;
-            default: item = new Item(0,"geocache0","");
-        }
-        itemTable.getItems().add(item);
-        itemTable.getSelectionModel().select( r, pos.getTableColumn());
-        removeSelectedRowsItens();
-        itemTable.scrollTo(item);
-    }
-
-    public void removeSelectedRowsItens() {
-        itemTable.getItems().removeAll(itemTable.getSelectionModel().getSelectedItems());
-        itemTable.getSelectionModel().clearSelection();
-    }
-
-    public void lerFile(){
+    public void lerFile() {
         for (int i = 0; i < 8; i++) sizes[i] = 0;
         // Leitura do ficheiro input.txt
         try {
@@ -796,5 +607,95 @@ public class Controller {
         } catch (FileNotFoundException erro) {
             System.out.println(erro);
         }
+    }
+
+    public void userAdd(ActionEvent actionEvent) {
+        User user = new User();
+        int id = Integer.parseInt(userIdField.getText());
+        if (!user_st.contains(id)) {
+            sizes[0]++;
+            user.id = Integer.parseInt(userIdField.getText());
+            user.nome = userNomeField.getText();
+            if (userTipoField.getText().equals("premium") || userTipoField.getText().equals("basic") || userTipoField.getText().equals("admin")) {
+                user.tipo = userTipoField.getText();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Tipo Nao Existe", ButtonType.CLOSE);
+                alert.showAndWait();
+                return;
+            }
+            user_st.put(id, user);
+        } else {
+            if ((user_st.contains(id) && user_st.get(id).nome.equals(userNomeField.getText()) && user_st.get(id).tipo.equals(userTipoField.getText()))) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "User Ja Existe", ButtonType.OK);
+                alert.showAndWait();
+                return;
+            } else {
+                System.out.println(user_st.get(id).id + " " + user_st.get(id).nome + " " + user_st.get(id).tipo);
+                user_st.get(id).nome = userNomeField.getText();
+                if (userTipoField.getText().equals("premium") || userTipoField.getText().equals("basic") || userTipoField.getText().equals("admin")) {
+                    user_st.get(id).tipo = userTipoField.getText();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "Tipo Nao Existe", ButtonType.CLOSE);
+                    alert.showAndWait();
+                    return;
+                }
+            }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "User Alterado", ButtonType.OK);
+            alert.showAndWait();
+        }
+        userNomeField.setText("");
+        userTipoField.setText("");
+        userIdField.setText("");
+        createTables();
+    }
+
+    public void userRemove(ActionEvent actionEvent) {
+    }
+
+    public void addReg(ActionEvent actionEvent) {
+        Regiao reg = new Regiao();
+        int id = Integer.parseInt(regIdField.getText());
+        if (!reg_st.contains(id)) {
+            sizes[1]++;
+            reg.id = Integer.parseInt(regIdField.getText());
+            reg.nome = regNomeField.getText();
+            reg.n_caches = 0;
+
+            
+        } else {
+            if ((reg_st.contains(id) && reg_st.get(id).nome.equals(regNomeField.getText()))) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Regiao Ja Existe", ButtonType.OK);
+                alert.showAndWait();
+                return;
+            } else {
+                reg_st.get(id).nome = regNomeField.getText();
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Regiao Alterado", ButtonType.CLOSE);
+                alert.showAndWait();
+                return;
+            }
+        }
+        reg_st.put(id, reg);
+        regIdField.setText("");
+        regNomeField.setText("");
+
+        createTables();
+    }
+
+    public void removeReg(ActionEvent actionEvent) {
+    }
+
+    public void addGeocache(ActionEvent actionEvent) {
+        Geocache geo = new Geocache();
+        String id = geoIdField.getText();
+        String tipo = geoTipoField.getText();
+        Float cX = Float.parseFloat(cXField.getText());
+        Float cY = Float.parseFloat(cYField.getText());
+        int id_reg = Integer.parseInt(geoIdRegField.getText());
+        geo.addGeocache(id,tipo,cX,cY,id_reg,sizes,geo_st,reg_st);
+
+        gG = new CriacaoGrafo(sizes, geo_st, lig_st);
+        edges = gG.create_arraysLig(sizes, lig_st);
+        gG.edgesDist(edges, gG, lig_st, sizes);
+        createGraphGroup();
     }
 }

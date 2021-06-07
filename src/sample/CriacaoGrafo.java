@@ -13,6 +13,8 @@ public class CriacaoGrafo extends EdgeWeightedGraph {
     private int[] positionsX;
     private int[] positionsY;
     public int[][] ligs;
+    public int[][] prem;
+    public int[][] basic;
 
     public CriacaoGrafo(int[] x, SequentialSearchST<Integer, Geocache> geo, SequentialSearchST<Integer, Ligacoes> lig) {
         super(x[2]);
@@ -163,6 +165,52 @@ public class CriacaoGrafo extends EdgeWeightedGraph {
         }
 
         return ligs;
+    }
+
+    public int[][] create_arraysLig_Basic(int[] sizes, SequentialSearchST<Integer, Ligacoes> lig, SequentialSearchST<Integer, Geocache> geo){
+        int sl = sizes[5];
+        int pos = 0;
+        basic = new int[sizes[2]][10];
+        for(int g = 1; g <= sizes[2]; g++){
+            for(int l = 1; l < sl; l++){
+                if(lig.get(l) != null && Integer.parseInt(lig.get(l).id_1.replace("geocache","")) == g){
+                    for(int t = 0; t < sizes[2]; t++){
+                        if(geo.get(t) != null && geo.get(t).id.equals(lig.get(l).id_2) && !geo.get(t).tipo.equals("premium")){
+                            basic[g-1][pos] = Integer.parseInt(lig.get(l).id_2.replace("geocache",""));
+                            pos++;
+                        }
+                    }
+                }
+//                else {sl --;}
+            }
+            pos = 0;
+            sl = sizes[5];
+        }
+
+        return basic;
+    }
+
+    public int[][] create_arraysLig_Prem(int[] sizes, SequentialSearchST<Integer, Ligacoes> lig, SequentialSearchST<Integer, Geocache> geo){
+        int sl = sizes[5];
+        int pos = 0;
+        prem = new int[sizes[2]][10];
+        for(int g = 1; g <= sizes[2]; g++){
+            for(int l = 1; l < sl; l++){
+                if(lig.get(l) != null && Integer.parseInt(lig.get(l).id_1.replace("geocache","")) == g){
+                    for(int t = 0; t < sizes[2]; t++){
+                        if(geo.get(t) != null && geo.get(t).id.equals(lig.get(l).id_2) && !geo.get(t).tipo.equals("basic")){
+                            prem[g-1][pos] = Integer.parseInt(lig.get(l).id_2.replace("geocache",""));
+                            pos++;
+                        }
+                    }
+                }
+//                else {sl --;}
+            }
+            pos = 0;
+            sl = sizes[5];
+        }
+
+        return prem;
     }
 
     public void edgesDist(int[][] ligs, CriacaoGrafo gG, SequentialSearchST<Integer, Ligacoes> lig, int[] sizes){

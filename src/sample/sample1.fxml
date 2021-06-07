@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="700.0">
         <menus>
@@ -37,12 +47,18 @@
                               <Button fx:id="buttonAdd" layoutY="376.0" mnemonicParsing="false" onAction="#handleButtonAdd" prefHeight="40.0" prefWidth="234.0" text="Add" />
                               <Button fx:id="buttonEdit" layoutX="233.0" layoutY="376.0" mnemonicParsing="false" onAction="#handleButtonEdit" prefHeight="40.0" prefWidth="233.3" text="Edit" />
                               <Button fx:id="buttonRemove" layoutX="467.0" layoutY="376.0" mnemonicParsing="false" onAction="#handleButtonRemove" prefHeight="40.0" prefWidth="233.3" text="Remove" />
-                              <Label layoutX="66.0" layoutY="33.0" text="ID1" />
-                              <Label layoutX="66.0" layoutY="88.0" text="ID2" />
-                              <Label layoutX="58.0" layoutY="142.0" text="Details" />
-                              <TextField fx:id="id1" layoutX="117.0" layoutY="29.0" prefHeight="25.0" prefWidth="543.0" promptText="Ex: geocache10" />
-                              <TextField fx:id="id2" layoutX="117.0" layoutY="84.0" prefHeight="25.0" prefWidth="543.0" promptText="Para Arestas: Ex: geocache10" />
-                              <TextArea fx:id="details" layoutX="117.0" layoutY="142.0" prefHeight="200.0" prefWidth="543.0" promptText="Vertice: ..... | Aresta: Temp;Dist" />
+                              <Label layoutX="67.0" layoutY="33.0" text="ID1" />
+                              <Label layoutX="67.0" layoutY="97.0" text="ID2" />
+                              <Label layoutX="53.0" layoutY="160.0" text="Distancia" />
+                              <Label layoutX="58.0" layoutY="224.0" text="Tempo" />
+                              <TextField fx:id="id1" layoutX="115.0" layoutY="29.0" prefHeight="25.0" prefWidth="235.0" promptText="Ex: geocache10" />
+                              <TextField fx:id="id2" layoutX="115.0" layoutY="93.0" prefHeight="25.0" prefWidth="235.0" promptText="Ex: geocache10" />
+                              <TextField fx:id="distField" layoutX="115.0" layoutY="156.0" prefHeight="25.0" prefWidth="235.0" promptText="Ex: 2.4" />
+                              <TextField fx:id="tempoField" layoutX="115.0" layoutY="220.0" prefHeight="25.0" prefWidth="235.0" promptText="Ex: 60" />
+                              <Button fx:id="regButtonSwitch" layoutX="482.0" layoutY="24.0" mnemonicParsing="false" onAction="#createGraphGroup" prefHeight="35.0" prefWidth="131.0" text="Regioes" />
+                              <Button fx:id="basePremButton" layoutX="482.0" layoutY="88.0" mnemonicParsing="false" onAction="#createGraphGroup_PremBasic" prefHeight="35.0" prefWidth="131.0" text="Basic/Premium" />
+                              <Button fx:id="basicButton" layoutX="482.0" layoutY="151.0" mnemonicParsing="false" onAction="#createGraphGroup_Basic" prefHeight="35.0" prefWidth="131.0" text="Basic" />
+                              <Button fx:id="premButton" layoutX="482.0" layoutY="224.0" mnemonicParsing="false" onAction="#createGraphGroup_Prem" prefHeight="35.0" prefWidth="131.0" text="Premium" />
                            </children></AnchorPane>
                     </content>
                   </Tab>
@@ -56,13 +72,18 @@
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <TableView fx:id="userTable" editable="true" layoutX="-1.0" layoutY="2.0" prefHeight="420.0" prefWidth="671.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <TableView fx:id="userTable" editable="true" layoutX="-1.0" layoutY="2.0" prefHeight="343.0" prefWidth="671.0" AnchorPane.bottomAnchor="82.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                   <columns>
                                                       <TableColumn fx:id="idUserCol" prefWidth="50.0" text="ID" />
                                                     <TableColumn fx:id="nomeUserCol" prefWidth="120.0" text="Nome" />
                                                     <TableColumn fx:id="tipoUserCol" prefWidth="120.0" text="Tipo" />
                                                   </columns>
                                                 </TableView>
+                                                <TextField fx:id="userIdField" layoutX="41.0" layoutY="353.0" promptText="ID" />
+                                                <TextField fx:id="userNomeField" layoutX="261.0" layoutY="353.0" promptText="Nome" />
+                                                <TextField fx:id="userTipoField" layoutX="487.0" layoutY="353.0" promptText="Tipo" />
+                                                <Button fx:id="userAddButton" layoutX="90.0" layoutY="386.0" mnemonicParsing="false" onAction="#userAdd" prefHeight="25.0" prefWidth="211.0" text="Add/Edit" />
+                                                <Button fx:id="removeAddButton" layoutX="382.0" layoutY="386.0" mnemonicParsing="false" onAction="#userRemove" prefHeight="25.0" prefWidth="211.0" text="Remove" />
                                              </children>
                                           </AnchorPane>
                                     </content>
@@ -71,13 +92,17 @@
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <TableView fx:id="regTable" prefHeight="420.0" prefWidth="673.0">
+                                                <TableView fx:id="regTable" prefHeight="351.0" prefWidth="673.0">
                                                    <columns>
                                                       <TableColumn fx:id="idRegCol" prefWidth="50.0" text="ID" />
                                                       <TableColumn fx:id="nomeRegCol" prefWidth="120.0" text="Nome" />
                                                       <TableColumn fx:id="idGeoRegCol" prefWidth="120.0" text="N Geocaches" />
                                                    </columns>
                                                 </TableView>
+                                                <TextField fx:id="regIdField" layoutX="14.0" layoutY="358.0" promptText="ID" />
+                                                <TextField fx:id="regNomeField" layoutX="188.0" layoutY="358.0" promptText="Nome" />
+                                                <Button fx:id="addRegButton" layoutX="14.0" layoutY="386.0" mnemonicParsing="false" onAction="#addReg" prefHeight="25.0" prefWidth="149.0" text="Add/Edit" />
+                                                <Button fx:id="removeRegButton" layoutX="188.0" layoutY="386.0" mnemonicParsing="false" onAction="#removeReg" prefHeight="25.0" prefWidth="149.0" text="Remove" />
                                              </children>
                                           </AnchorPane>
                                     </content>
@@ -86,7 +111,7 @@
                                       <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <TableView fx:id="geoTable" prefHeight="420.0" prefWidth="673.0">
+                                                <TableView fx:id="geoTable" prefHeight="369.0" prefWidth="673.0">
                                                    <columns>
                                                       <TableColumn fx:id="idGeoCol" prefWidth="120.0" text="ID" />
                                                       <TableColumn fx:id="tipoGeoCol" prefWidth="120.0" text="Tipo" />
@@ -96,6 +121,12 @@
                                                       <TableColumn fx:id="iDRegGeoCol" prefWidth="50.0" text="ID Reg" />
                                                    </columns>
                                                 </TableView>
+                                                <TextField fx:id="geoIdField" layoutY="369.0" prefHeight="25.0" prefWidth="112.2" promptText="ID" />
+                                                <TextField fx:id="geoTipoField" layoutX="113.0" layoutY="369.0" prefHeight="25.0" prefWidth="112.2" promptText="Tipo" />
+                                                <TextField fx:id="cXField" layoutX="226.0" layoutY="369.0" prefHeight="25.0" prefWidth="112.2" promptText="Coordenadas X" />
+                                                <TextField fx:id="cYField" layoutX="337.0" layoutY="369.0" prefHeight="25.0" prefWidth="112.2" promptText="Coordenadas Y" />
+                                                <TextField fx:id="geoIdRegField" layoutX="450.0" layoutY="369.0" prefHeight="25.0" prefWidth="112.2" promptText="ID Regiao" />
+                                                <Button fx:id="addGeocacheButton" layoutX="88.0" layoutY="394.0" mnemonicParsing="false" onAction="#addGeocache" prefHeight="25.0" prefWidth="164.0" text="Add/Edit" />
                                              </children>
                                           </AnchorPane>
                                       </content>
