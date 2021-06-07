@@ -70,8 +70,6 @@ public class Controller {
     public TableColumn<Item, String> nomeItensCol;
 
     public int[][] edges;
-    public int[][] edges_prem;
-    public int[][] edges_basic;
 
     public String input = "";
 
@@ -182,13 +180,13 @@ public class Controller {
                 Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.web("#49BEB7"));
                 Text id = new Text(" " + (i + 1));
 
-            StackPane sp = new StackPane();
-            sp.setLayoutX(gG.getPositionsX(i) - radius);
-            sp.setLayoutY(gG.getPositionsY(i) - radius);
-            sp.getChildren().addAll(c, id);
-            graphGroup.getChildren().add(sp);
+                StackPane sp = new StackPane();
+                sp.setLayoutX(gG.getPositionsX(i) - radius);
+                sp.setLayoutY(gG.getPositionsY(i) - radius);
+                sp.getChildren().addAll(c, id);
+                graphGroup.getChildren().add(sp);
+            }
         }
-    }
     }
 
     public void createGraphGroup_Prem(ActionEvent actionEvent) {
@@ -357,8 +355,6 @@ public class Controller {
 
         gG = new CriacaoGrafo(sizes, geo_st, lig_st);
         edges = gG.create_arraysLig(sizes, lig_st);
-        edges_basic = gG.create_arraysLig_Basic(sizes,lig_st,geo_st);
-        edges_prem = gG.create_arraysLig_Prem(sizes,lig_st,geo_st);
         gG.edgesDist(edges, gG, lig_st, sizes);
         createGraphGroup();
     }
@@ -369,8 +365,6 @@ public class Controller {
 
         gG = new CriacaoGrafo(sizes, geo_st, lig_st);
         edges = gG.create_arraysLig(sizes, lig_st);
-        edges_basic = gG.create_arraysLig_Basic(sizes,lig_st,geo_st);
-        edges_prem = gG.create_arraysLig_Prem(sizes,lig_st,geo_st);
         gG.edgesTemp(edges, gG, lig_st, sizes);
         createGraphGroup();
     }
@@ -661,7 +655,7 @@ public class Controller {
             reg.nome = regNomeField.getText();
             reg.n_caches = 0;
 
-            
+
         } else {
             if ((reg_st.contains(id) && reg_st.get(id).nome.equals(regNomeField.getText()))) {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Regiao Ja Existe", ButtonType.OK);
@@ -680,7 +674,6 @@ public class Controller {
 
         createTables();
     }
-
 
     public void removeReg(ActionEvent actionEvent) {
     }
