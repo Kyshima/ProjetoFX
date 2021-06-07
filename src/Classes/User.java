@@ -1,9 +1,8 @@
-package edu.ufp.inf.lp2_aed2.projeto;
+package Classes;
 
 import edu.princeton.cs.algs4.*;
 
 import java.lang.String;
-import java.util.Arrays;
 
 public class User {
     public int id;
