@@ -1,4 +1,4 @@
-package Classes;
+package edu.ufp.inf.lp2_aed2.projeto;
 
 import edu.princeton.cs.algs4.*;
 
@@ -116,14 +116,17 @@ public class User {
                 case "nome": {
                     user_st.get(id).nome = conteudo;
                     System.out.println("User " + id + " editado com sucesso! -> " + user_st.get(id));
+                    break;
                 }
                 case "tipo": {
                     user_st.get(id).tipo = conteudo;
                     System.out.println("User " + id + " editado com sucesso! -> " + user_st.get(id));
+                    break;
                 }
                 case "travelbug": {
                     user_st.get(id).travelbug = Integer.parseInt(conteudo);
                     System.out.println("User " + id + " editado com sucesso! -> " + user_st.get(id));
+                    break;
                 }
                 default: System.out.println("Tipo introduzido invalido na ediçao do User");
             }

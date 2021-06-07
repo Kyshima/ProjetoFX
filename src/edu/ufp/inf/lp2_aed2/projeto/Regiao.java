@@ -1,4 +1,4 @@
-package Classes;
+package edu.ufp.inf.lp2_aed2.projeto;
 import edu.princeton.cs.algs4.*;
 
 import java.lang.String;
@@ -79,7 +79,7 @@ public class Regiao {
    * @param geo_st - ST das Geocaches
    * @param item_st - ST dos Itens
    */
-  public void removeRegiao(int id, int[] sizes, SequentialSearchST<Integer, Regiao> reg_st, SequentialSearchST<Integer, Geocache> geo_st, SequentialSearchST<Integer, Item> item_st, RedBlackBST<Integer, HistoricoVisited> hisV_st){
+  public void removeRegiao(int id, int[] sizes, SequentialSearchST<Integer, Regiao> reg_st, SequentialSearchST<Integer, Geocache> geo_st, SequentialSearchST<Integer, Item> item_st, SequentialSearchST<Integer, Ligacoes> lig_st, RedBlackBST<Integer, HistoricoVisited> hisV_st){
       if(reg_st.contains(id)){
 
       if(reg_st.get(id).n_caches > 0){
@@ -89,7 +89,7 @@ public class Regiao {
         for(int i = 1; i <= n_geo; i++){
           if(geo_st.get(i) != null && geo_st.get(i).id_reg == id){
             System.out.print("\t");
-            geo_st.get(i).removeGeocache("geocache"+i,sizes,geo_st,reg_st,item_st,hisV_st);
+            geo_st.get(i).removeGeocache("geocache"+i,sizes,geo_st,reg_st,item_st,lig_st,hisV_st);
           }else n_geo++;
         }
         System.out.println("\t----------------------------------------");
