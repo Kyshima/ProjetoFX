@@ -681,6 +681,7 @@ public class Controller {
         createTables();
     }
 
+
     public void removeReg(ActionEvent actionEvent) {
     }
 
