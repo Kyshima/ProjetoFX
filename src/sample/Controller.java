@@ -16,9 +16,10 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
@@ -71,6 +72,9 @@ public class Controller {
     public TextField cXField;
     public TextField cYField;
     public TextField geoIdRegField;
+    public TextField spField1;
+    public TextField spField2;
+
 
     int[] sizes = new int[8];
     protected static final int GROUP_MARGIN = 10;
@@ -86,55 +90,43 @@ public class Controller {
     private CriacaoGrafo gG;
 
     public void createGraphGroup() {        //Regiao Butao
-        graphGroup.getChildren().clear();
+        createGraphGroupExtra(0);
 
-        for (int i = 1; i < gG.V(); i++) {
-            for (Edge v : gG.adj(i-1)) {
-                Line l = new Line(gG.getPositionsX(i-1), gG.getPositionsY(i-1), gG.getPositionsX(v.other(i-1)), gG.getPositionsY(v.other(i-1)));
-
-                l.setStyle("-fx-stroke-width: " + v.weight());
-                graphGroup.getChildren().add(l);
-            }
-        }
-
-        for (int i = 0; i < gG.V(); i++) {
-            Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.LIGHTBLUE);
-            Text id = new Text(" " + (i+1));
-            if (geo_st.get(i+1) != null) {
-                if (geo_st.get(i+1).id_reg == 1){
+        int si = gG.V();
+        for(int i = 0, j = 0; i < si; i++, j++){
+            if(geo_st.get(i) != null) {
+                Circle c = new Circle(gG.getPositionsX(j), gG.getPositionsY(j), radius, Color.LIGHTBLUE);
+                Text id = new Text(" " + (i));
+                if (geo_st.get(i).id_reg == 1) {
                     c.setFill(Color.web("FF5959"));
-                } else if (geo_st.get(i+1).id_reg == 2) {
+                } else if (geo_st.get(i).id_reg == 2) {
                     c.setFill(Color.web("#FACF5A"));
-                } else if (geo_st.get(i+1).id_reg == 3) {
+                } else if (geo_st.get(i).id_reg == 3) {
                     c.setFill(Color.web("#49BEB7"));
                 } else {
                     c.setFill(Color.web("085F63"));
                 }
-            }
 
-            StackPane sp = new StackPane();
-            sp.setLayoutX(gG.getPositionsX(i) - radius);
-            sp.setLayoutY(gG.getPositionsY(i) - radius);
-            sp.getChildren().addAll(c, id);
-            graphGroup.getChildren().add(sp);
+                StackPane sp = new StackPane();
+                sp.setLayoutX(gG.getPositionsX(j) - radius);
+                sp.setLayoutY(gG.getPositionsY(j) - radius);
+                sp.getChildren().addAll(c, id);
+                graphGroup.getChildren().add(sp);
+            } else {
+                si++;
+                j--;
+            }
         }
     }
 
     public void createGraphGroup_PremBasic() {           //Premium/Basic Butao
-        graphGroup.getChildren().clear();
-        for (int i = 0; i < gG.V(); i++) {
-            for (Edge v : gG.adj(i)) {
-                Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v.other(i)), gG.getPositionsY(v.other(i)));
+        createGraphGroupExtra(0);
 
-                l.setStyle("-fx-stroke-width: " + v.weight());
-                graphGroup.getChildren().add(l);
-            }
-        }
         for (int i = 0; i < gG.V(); i++) {
-            Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.web("#49BEB7",1));
+            Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.web("#49BEB7", 1));
             Text id = new Text(" " + (i + 1));
 
-            if (geo_st.get(i+1) != null && geo_st.get(i+1).tipo.equals("premium")) {
+            if (geo_st.get(i + 1) != null && geo_st.get(i + 1).tipo.equals("premium")) {
                 c.setFill(Color.web("FF5959"));
             }
 
@@ -148,19 +140,10 @@ public class Controller {
     }
 
     public void createGraphGroup_Basic(ActionEvent actionEvent) {
-        graphGroup.getChildren().clear();
-        for (int i = 0; i < gG.V(); i++) {
-            for (Edge v : gG.adj(i)) {
-                if(geo_st.get(v.other(i)+1) != null && geo_st.get(i+1) != null && geo_st.get(v.other(i)+1).tipo.equals("basic") && geo_st.get(i+1).tipo.equals("basic")){
-                    Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v.other(i)), gG.getPositionsY(v.other(i)));
-                    l.setStyle("-fx-stroke-width: " + v.weight());
-                    graphGroup.getChildren().add(l);
-                }
-            }
-        }
+        createGraphGroupExtra(1);
 
         for (int i = 0; i < gG.V(); i++) {
-            if(geo_st.get(i+1) != null && geo_st.get(i+1).tipo.equals("basic")) {
+            if (geo_st.get(i + 1) != null && geo_st.get(i + 1).tipo.equals("basic")) {
                 Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.web("#49BEB7"));
                 Text id = new Text(" " + (i + 1));
 
@@ -174,19 +157,10 @@ public class Controller {
     }
 
     public void createGraphGroup_Prem(ActionEvent actionEvent) {
-        graphGroup.getChildren().clear();
-        for (int i = 0; i < gG.V(); i++) {
-            for (Edge v : gG.adj(i)) {
-                if(geo_st.get(v.other(i)+1) != null && geo_st.get(i+1) != null && geo_st.get(v.other(i)+1).tipo.equals("premium") && geo_st.get(i+1).tipo.equals("premium")){
-                    Line l = new Line(gG.getPositionsX(i), gG.getPositionsY(i), gG.getPositionsX(v.other(i)), gG.getPositionsY(v.other(i)));
-                    l.setStyle("-fx-stroke-width: " + v.weight());
-                    graphGroup.getChildren().add(l);
-                }
-            }
-        }
+        createGraphGroupExtra(2);
 
         for (int i = 0; i < gG.V(); i++) {
-            if(geo_st.get(i+1) != null && geo_st.get(i+1).tipo.equals("premium")) {
+            if (geo_st.get(i + 1) != null && geo_st.get(i + 1).tipo.equals("premium")) {
                 Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.web("FF5959"));
                 Text id = new Text(" " + (i + 1));
 
@@ -195,6 +169,41 @@ public class Controller {
                 sp.setLayoutY(gG.getPositionsY(i) - radius);
                 sp.getChildren().addAll(c, id);
                 graphGroup.getChildren().add(sp);
+            }
+        }
+    }
+
+    public void createGraphGroupExtra(int k){
+        graphGroup.getChildren().clear();
+
+        for (int i = 0; i < gG.V(); i++) {
+            switch(k){
+                case 0:
+                    for (DirectedEdge v : gG.adj(i)) {
+                        Line l = new Line(gG.getPositionsX(v.from()), gG.getPositionsY(v.from()), gG.getPositionsX(v.to()), gG.getPositionsY(v.to()));
+
+                        l.setStyle("-fx-stroke-width: " + v.weight());
+                        graphGroup.getChildren().add(l);
+                    }
+                    break;
+                case 1:
+                    for (DirectedEdge v : gG.adj(i)) {
+                        if ((geo_st.get(v.to()+1) != null && geo_st.get(v.from()+1) != null) && ((geo_st.get(v.to()+1).tipo.equals("basic") && geo_st.get(v.from()+1).tipo.equals("basic")))) {
+                            Line l = new Line(gG.getPositionsX(v.from()), gG.getPositionsY(v.from()), gG.getPositionsX(v.to()), gG.getPositionsY(v.to()));
+                            l.setStyle("-fx-stroke-width: " + v.weight());
+                            graphGroup.getChildren().add(l);
+                        }
+                    }
+                    break;
+                case 2:
+                    for (DirectedEdge v : gG.adj(1)) {
+                        if (geo_st.get(v.to()+1) != null && geo_st.get(v.from()+1) != null && (geo_st.get(v.to()+1).tipo.equals("premium") && geo_st.get(v.from()+1).tipo.equals("premium"))) {
+                            Line l = new Line(gG.getPositionsX(v.from()), gG.getPositionsY(v.from()), gG.getPositionsX(v.to()), gG.getPositionsY(v.to()));
+                            l.setStyle("-fx-stroke-width: " + v.weight());
+                            graphGroup.getChildren().add(l);
+                        }
+                    }
+                    break;
             }
         }
     }
@@ -213,8 +222,7 @@ public class Controller {
         for (int i = 1; i <= s; i++) {
             if (user_st.get(i) != null) {
                 user.add(new User(i, user_st.get(i).nome, user_st.get(i).tipo));
-            }
-            else s++;
+            } else s++;
         }
         return user;
     }
@@ -225,8 +233,7 @@ public class Controller {
         for (int i = 1; i <= s; i++) {
             if (reg_st.get(i) != null) {
                 reg.add(new Regiao(i, reg_st.get(i).nome, reg_st.get(i).getN_caches()));
-            }
-            else s++;
+            } else s++;
         }
         return reg;
     }
@@ -237,8 +244,7 @@ public class Controller {
         for (int i = 1; i <= s; i++) {
             if (geo_st.get(i) != null) {
                 geo.add(new Geocache(geo_st.get(i).id, geo_st.get(i).tipo, geo_st.get(i).coordenadasX, geo_st.get(i).coordenadasY, geo_st.get(i).n_itens, geo_st.get(i).getId_reg()));
-            }
-            else s++;
+            } else s++;
         }
         return geo;
     }
@@ -249,8 +255,7 @@ public class Controller {
         for (int i = 1; i <= s; i++) {
             if (item_st.get(i) != null) {
                 item.add(new Item(i, item_st.get(i).getId_geo(), item_st.get(i).item));
-            }
-            else s++;
+            } else s++;
         }
         return item;
     }
@@ -313,7 +318,8 @@ public class Controller {
                 gG.edgesDist(array, gG, geo_st, lig_st, sizes);
                 createGraphGroup();
 
-            }if (flag == 3) {
+            }
+            if (flag == 3) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Edge Adicionada", ButtonType.CLOSE);
                 alert.showAndWait();
             } else {
@@ -587,20 +593,21 @@ public class Controller {
 
     public void userAdd(ActionEvent actionEvent) {
         User user = new User();
-        int id = 0; String nome = "0",tipo = "0";
+        int id = 0;
+        String nome = "0", tipo = "0";
 
-        if(!userIdField.getText().equals("")){
+        if (!userIdField.getText().equals("")) {
             id = Integer.parseInt(userIdField.getText());
-            if(!userNomeField.getText().equals("") && !userTipoField.getText().equals("")){
-                if(user_st.contains(id)){
+            if (!userNomeField.getText().equals("") && !userTipoField.getText().equals("")) {
+                if (user_st.contains(id)) {
                     Alert alert = new Alert(Alert.AlertType.WARNING, "O User ja existe!", ButtonType.OK);
                     alert.showAndWait();
                     return;
-                }else{
+                } else {
                     tipo = userTipoField.getText();
-                    if(tipo.equals("basic") || tipo.equals("premium") || tipo.equals("admin")){
+                    if (tipo.equals("basic") || tipo.equals("premium") || tipo.equals("admin")) {
                         nome = userNomeField.getText();
-                        user.addUser(id,nome,tipo,sizes,user_st);
+                        user.addUser(id, nome, tipo, sizes, user_st);
                         createTables();
                     } else {
                         Alert alert = new Alert(Alert.AlertType.WARNING, "O Tipo não existe!", ButtonType.OK);
@@ -608,34 +615,34 @@ public class Controller {
                         return;
                     }
                 }
-            }else if(!userNomeField.getText().equals("") && userTipoField.getText().equals("")){
-                if(user_st.contains(id)){
+            } else if (!userNomeField.getText().equals("") && userTipoField.getText().equals("")) {
+                if (user_st.contains(id)) {
                     nome = userNomeField.getText();
-                    user.editUser("nome",nome,id,user_st);
+                    user.editUser("nome", nome, id, user_st);
                     createTables();
-                }else{
+                } else {
                     Alert alert = new Alert(Alert.AlertType.WARNING, "O User não existe!", ButtonType.OK);
                     alert.showAndWait();
                     return;
                 }
-            }else if(userNomeField.getText().equals("") && !userTipoField.getText().equals("")){
-                if(user_st.contains(id)){
+            } else if (userNomeField.getText().equals("") && !userTipoField.getText().equals("")) {
+                if (user_st.contains(id)) {
                     tipo = userTipoField.getText();
-                    if(tipo.equals("basic") || tipo.equals("premium") || tipo.equals("admin")){
-                        user.editUser("tipo",tipo,id,user_st);
+                    if (tipo.equals("basic") || tipo.equals("premium") || tipo.equals("admin")) {
+                        user.editUser("tipo", tipo, id, user_st);
                         createTables();
                     } else {
                         Alert alert = new Alert(Alert.AlertType.WARNING, "O Tipo não existe!", ButtonType.OK);
                         alert.showAndWait();
                         return;
                     }
-                }else{
+                } else {
                     Alert alert = new Alert(Alert.AlertType.WARNING, "O User não existe!", ButtonType.OK);
                     alert.showAndWait();
                     return;
                 }
             }
-        }else{
+        } else {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Escreva o ID que pretende adicionar!", ButtonType.OK);
             alert.showAndWait();
             return;
@@ -644,9 +651,9 @@ public class Controller {
 
     public void userRemove(ActionEvent actionEvent) {
         User u = new User();
-        if(!userIdField.getText().equals("")){
+        if (!userIdField.getText().equals("")) {
             int id = Integer.parseInt(userIdField.getText());
-            u.removeUser(id,sizes,user_st);
+            u.removeUser(id, sizes, user_st);
             createTables();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Escreva o ID que pretende remover!", ButtonType.OK);
@@ -667,9 +674,9 @@ public class Controller {
                     reg.editRegiao("nome",nome,id,reg_st);
                     createTables();
                 }else{
-                        nome = regNomeField.getText();
-                        reg.addRegiao(id,nome,sizes,reg_st);
-                        createTables();
+                    nome = regNomeField.getText();
+                    reg.addRegiao(id,nome,sizes,reg_st);
+                    createTables();
                 }
             }
         }else{
@@ -690,11 +697,13 @@ public class Controller {
             gG.edgesDist(edges, gG, geo_st, lig_st, sizes);
             createGraphGroup();
 
+
             createTables();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Escreva o ID que pretende remover!", ButtonType.OK);
             alert.showAndWait();
             return;
+
         }
     }
 
@@ -702,15 +711,179 @@ public class Controller {
         Geocache geo = new Geocache();
         String id = geoIdField.getText();
         String tipo = geoTipoField.getText();
-        Float cX = Float.parseFloat(cXField.getText());
-        Float cY = Float.parseFloat(cYField.getText());
-        int id_reg = Integer.parseInt(geoIdRegField.getText());
-        geo.addGeocache(id,tipo,cX,cY,id_reg,sizes,geo_st,reg_st);
 
-        gG = new CriacaoGrafo(sizes, geo_st, lig_st);
-        edges = gG.create_arraysLig(sizes, geo_st, lig_st);
-        gG.edgesDist(edges, gG, geo_st, lig_st, sizes);
-        createGraphGroup();
-        createTables();
+        if (!geoIdField.getText().equals("")) {
+            int i = Integer.parseInt(id.replace("geocache", ""));
+            if (geo_st.contains(i)) {
+                if ((tipo.equals("basic") || tipo.equals("premium")) && cYField.getText().equals("") && cXField.getText().equals("") && geoIdRegField.getText().equals("")) {
+                    geo.editCache("tipo", tipo, i, geo_st);
+                    createTables();
+                }
+            } else {
+                Float cX = Float.parseFloat(cXField.getText());
+                Float cY = Float.parseFloat(cYField.getText());
+                int id_reg = Integer.parseInt(geoIdRegField.getText());
+                geo.addGeocache(id, tipo, cX, cY, id_reg, sizes, geo_st, reg_st);
+            }
+
+            gG = new CriacaoGrafo(sizes, geo_st, lig_st);
+            edges = gG.create_arraysLig(sizes, geo_st, lig_st);
+            gG.edgesDist(edges, gG, geo_st, lig_st, sizes);
+            createGraphGroup();
+            createTables();
+        }
+    }
+
+    public void saveTxt(ActionEvent actionEvent) {
+        Out out = new Out("data/output2.txt");
+
+        // Users
+        out.println(user_st.size());
+        int n_users = sizes[0];
+        for (int i = 1; i <= n_users; i++) {
+            if (user_st.get(i) != null) {
+                out.println(i + ", " + user_st.get(i).nome + ", " + user_st.get(i).tipo);
+            } else n_users++;
+        }
+
+        // Regiao
+        int n_reg = sizes[1];
+        out.println(n_reg);
+        int last = 0;
+        for (int i = 1; i <= n_reg; i++) {
+            if (reg_st.get(i) != null) {
+                out.println(reg_st.get(i).nome + ", " + reg_st.get(i).n_caches);
+
+                //Geocaches
+                int n_geo = (reg_st.get(i).n_caches + last);
+                for (int j = last + 1; j <= n_geo; j++) {
+                    if (geo_st.get(j) != null && regContainsCache("geocache" + j, i, geo_st)) {
+                        out.print(geo_st.get(j).id + ", " + geo_st.get(j).tipo + ", " + geo_st.get(j).coordenadasX + ", " + geo_st.get(j).coordenadasY + ", " + geo_st.get(j).n_itens);
+                        if (geo_st.get(j).n_itens > 0) {
+
+                            //itens
+                            int n_itens = geo_st.get(j).n_itens;
+                            for (int k = 1; k <= n_itens; k++) {
+                                if (geoContainsItem(k, geo_st.get(j).id, item_st)) {
+                                    out.print(", " + item_st.get(k).item);
+                                } else n_itens++;
+                            }
+                        }
+                        last = j;
+                        out.print("\n");
+                    } else n_geo++;
+                }
+            } else n_reg++;
+        }
+
+        int n_lig = sizes[5];
+        out.println(lig_st.size());
+        for (int i = 1; i <= n_lig; i++) {
+            if (lig_st.get(i) != null) {
+                out.println(lig_st.get(i).id_1 + ", " + lig_st.get(i).id_2 + ", " + lig_st.get(i).distancia + ", " + lig_st.get(i).tempo);
+            } else n_lig++;
+        }
+
+        int n_tvb = sizes[4];
+        out.println(tvb_st.size());
+        for (int i = 1; i <= n_tvb; i++) {
+            if (tvb_st.get(i) != null) {
+                out.println(tvb_st.get(i).id + ", " + tvb_st.get(i).user + ", " + tvb_st.get(i).geo_inicial + ", " + tvb_st.get(i).geo_destino);
+            } else n_tvb++;
+        }
+
+        out.close();
+
+        // Ficheiro logs
+        Out logs_out = new Out("data/logs.txt");
+
+        int p = sizes[6];
+        logs_out.println(p);
+        for (int i = 1; i <= p; i++) {
+
+            logs_out.print(hisV_st.get(i).user + ", " + hisV_st.get(i).n_visited);
+            for (int z = 0; z < hisV_st.get(i).n_visited; z++) {
+                logs_out.print(", " + hisV_st.get(i).visited[z]);
+            }
+            logs_out.print("\n");
+
+            // Imprimir datas
+            for (int k = 0; k < hisV_st.get(i).n_visited; k++) {
+                logs_out.print(hisV_st.get(i).date[k]);
+                if (k < hisV_st.get(i).n_visited - 1) {
+                    logs_out.print(", ");
+                }
+            }
+            logs_out.print("\n");
+        }
+
+        int s = sizes[7];
+        logs_out.println(s);
+        for (int i = 1; i <= s; i++) {
+            logs_out.println(hisTB_st.get(i).user + ", " + hisTB_st.get(i).id_tb + ", " + hisTB_st.get(i).tb_start + ", " + hisTB_st.get(i).tb_end);
+        }
+        logs_out.close();
+    }
+
+
+    public static boolean geoContainsItem(int id_item, String id_geo, SequentialSearchST<Integer, Item> itens) {
+        if (itens.contains(id_item)) {
+            return (itens.get(id_item).id_geo.equals(id_geo));
+        }
+        return false;
+    }
+
+    /**
+     * Verifica se uma regiao contem a geocache
+     *
+     * @param id_geo - Id da Geocache
+     * @param regiao - Id da Regiao
+     * @param geo    - ST das Geocaches
+     * @return - Verdadeiro se contem, falso se nao contem
+     */
+    public static boolean regContainsCache(String id_geo, int regiao, SequentialSearchST<Integer, Geocache> geo) {
+        int n_geo = Integer.parseInt(id_geo.replace("geocache", ""));
+        if (geo.contains(n_geo)) {
+            return (geo.get(n_geo).id_reg == regiao);
+        }
+        return false;
+    }
+
+    public void shortestPath(ActionEvent actionEvent) {
+            DijkstraSP dsp = new DijkstraSP(gG, Integer.parseInt(spField1.getText().replace("geocache",""))-1);
+            Iterable<DirectedEdge> path = dsp.pathTo(Integer.parseInt(spField2.getText().replace("geocache",""))-1);
+
+            graphGroup.getChildren().clear();
+
+           for(DirectedEdge e : path){
+               //System.out.println(e.from() + " " + e.to() + " " + e.weight());
+               Line l = new Line(gG.getPositionsX(e.from()), gG.getPositionsY(e.from()), gG.getPositionsX(e.to()), gG.getPositionsY(e.to()));
+
+               l.setStyle("-fx-stroke: DARKGREEN" );
+               graphGroup.getChildren().add(l);
+           }
+        for (int i = 0; i < gG.V(); i++) {
+                Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.LIGHTBLUE);
+                Text id = new Text(" " + (i + 1));
+                if (geo_st.get(i + 1) != null) {
+                    if (geo_st.get(i + 1).id_reg == 1) {
+                        c.setFill(Color.web("FF5959"));
+                    } else if (geo_st.get(i + 1).id_reg == 2) {
+                        c.setFill(Color.web("#FACF5A"));
+                    } else if (geo_st.get(i + 1).id_reg == 3) {
+                        c.setFill(Color.web("#49BEB7"));
+                    } else {
+                        c.setFill(Color.web("085F63"));
+                    }
+
+                StackPane sp = new StackPane();
+                sp.setLayoutX(gG.getPositionsX(i) - radius);
+                sp.setLayoutY(gG.getPositionsY(i) - radius);
+                sp.getChildren().addAll(c, id);
+                graphGroup.getChildren().add(sp);
+            }
+        }
     }
 }
+
+

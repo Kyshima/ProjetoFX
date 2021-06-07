@@ -23,6 +23,7 @@
               <MenuItem mnemonicParsing="false" onAction="#startMain" text="Start" />
                   <MenuItem fx:id="butDist" mnemonicParsing="false" onAction="#createDist" text="Distancia" />
                   <MenuItem fx:id="butTempo" mnemonicParsing="false" onAction="#createTempo" text="Tempo" />
+                  <MenuItem fx:id="saveButtonTxt" mnemonicParsing="false" onAction="#saveTxt" text="Save" />
             </items>
           </Menu>
         </menus>
@@ -59,6 +60,11 @@
                               <Button fx:id="basePremButton" layoutX="482.0" layoutY="88.0" mnemonicParsing="false" onAction="#createGraphGroup_PremBasic" prefHeight="35.0" prefWidth="131.0" text="Basic/Premium" />
                               <Button fx:id="basicButton" layoutX="482.0" layoutY="151.0" mnemonicParsing="false" onAction="#createGraphGroup_Basic" prefHeight="35.0" prefWidth="131.0" text="Basic" />
                               <Button fx:id="premButton" layoutX="482.0" layoutY="224.0" mnemonicParsing="false" onAction="#createGraphGroup_Prem" prefHeight="35.0" prefWidth="131.0" text="Premium" />
+                              <Button fx:id="shortestPathButton" layoutX="482.0" layoutY="286.0" mnemonicParsing="false" onAction="#shortestPath" prefHeight="35.0" prefWidth="131.0" text="Shortest Path" />
+                              <TextField fx:id="spField1" layoutX="115.0" layoutY="291.0" prefHeight="25.0" prefWidth="76.0" promptText="geocacheN" />
+                              <Label layoutX="67.0" layoutY="295.0" prefHeight="17.0" prefWidth="20.0" text="De" />
+                              <Label layoutX="224.0" layoutY="295.0" prefHeight="17.0" prefWidth="20.0" text="a" />
+                              <TextField fx:id="spField2" layoutX="266.0" layoutY="291.0" prefHeight="25.0" prefWidth="76.0" promptText="geocacheN" />
                            </children></AnchorPane>
                     </content>
                   </Tab>

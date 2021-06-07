@@ -176,6 +176,7 @@ public class Geocache {
             // Decrescer 1 das caches
             reg.get(geo.get(idgeo).id_reg).n_caches--;
             geo.delete(idgeo);
+            int i;
             sizes[2]--;
         } else {
             System.out.println("Erro na Remoção da GEOCACHE:\tO ID " + id + " não existe!");
@@ -196,20 +197,25 @@ public class Geocache {
                 case "tipo": {
                     geo_st.get(id).tipo = conteudo;
                     System.out.println("Geocache " + id + " editada com sucesso! -> " + geo_st.get(id));
+                    break;
                 }
                 case "coordenadasX": {
                     geo_st.get(id).coordenadasX = Float.parseFloat(conteudo);
                     System.out.println("Geocache " + id + " editada com sucesso! -> " + geo_st.get(id));
+                    break;
                 }
                 case "coordenadasY": {
                     geo_st.get(id).coordenadasY = Float.parseFloat(conteudo);
                     System.out.println("Geocache " + id + " editada com sucesso! -> " + geo_st.get(id));
+                    break;
                 }
                 case "regiao": {
                     geo_st.get(id).id_reg = Integer.parseInt(conteudo);
                     System.out.println("Geocache " + id + " editada com sucesso! -> " + geo_st.get(id));
+                    break;
                 }
                 default: System.out.println("Tipo introduzido invalido na ediçao da Geocache");
+                    break;
             }
         } else {
             System.out.println("Erro na Edição do GEOCACHE:\tO ID " + id + " não existe!");
