@@ -1,42 +1,29 @@
 package sample;
-
-import com.sun.prism.paint.Paint;
 import edu.princeton.cs.algs4.*;
 import edu.ufp.inf.lp2_aed2.projeto.*;
-
 import edu.ufp.inf.lp2_aed2.projeto.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
-
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.Objects;
 import java.util.Scanner;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TablePosition;
-import javafx.util.Callback;
 
 public class Controller {
     public Group graphGroup;
@@ -70,9 +57,7 @@ public class Controller {
     public TableColumn<Item, String> nomeItensCol;
 
     public int[][] edges;
-
     public String input = "";
-
     public double radius = 15;
 
     public TextField userIdField;
@@ -86,7 +71,6 @@ public class Controller {
     public TextField cXField;
     public TextField cYField;
     public TextField geoIdRegField;
-
 
     int[] sizes = new int[8];
     protected static final int GROUP_MARGIN = 10;
@@ -228,11 +212,9 @@ public class Controller {
         ObservableList<User> user = FXCollections.observableArrayList();
         for (int i = 1; i <= s; i++) {
             if (user_st.get(i) != null) {
-                user.add(new User(user_st.get(i).getId(), user_st.get(i).nome, user_st.get(i).tipo));
+                user.add(new User(i, user_st.get(i).nome, user_st.get(i).tipo));
             }
             else s++;
-
-
         }
         return user;
     }
@@ -242,7 +224,7 @@ public class Controller {
         ObservableList<Regiao> reg = FXCollections.observableArrayList();
         for (int i = 1; i <= s; i++) {
             if (reg_st.get(i) != null) {
-                reg.add(new Regiao(reg_st.get(i).getId(), reg_st.get(i).nome, reg_st.get(i).getN_caches()));
+                reg.add(new Regiao(i, reg_st.get(i).nome, reg_st.get(i).getN_caches()));
             }
             else s++;
         }
@@ -266,7 +248,7 @@ public class Controller {
         int s = sizes[3];
         for (int i = 1; i <= s; i++) {
             if (item_st.get(i) != null) {
-                item.add(new Item(item_st.get(i).getId(), item_st.get(i).getId_geo(), item_st.get(i).item));
+                item.add(new Item(i, item_st.get(i).getId_geo(), item_st.get(i).item));
             }
             else s++;
         }
@@ -327,8 +309,8 @@ public class Controller {
                 graphGroup.getChildren().clear();
                 gG = null;
                 gG = new CriacaoGrafo(sizes, geo_st, lig_st);
-                int[][] array = gG.create_arraysLig(sizes, lig_st);
-                gG.edgesDist(array, gG, lig_st, sizes);
+                int[][] array = gG.create_arraysLig(sizes, geo_st, lig_st);
+                gG.edgesDist(array, gG, geo_st, lig_st, sizes);
                 createGraphGroup();
 
             }if (flag == 3) {
@@ -354,8 +336,8 @@ public class Controller {
         gG = null;
 
         gG = new CriacaoGrafo(sizes, geo_st, lig_st);
-        edges = gG.create_arraysLig(sizes, lig_st);
-        gG.edgesDist(edges, gG, lig_st, sizes);
+        edges = gG.create_arraysLig(sizes, geo_st, lig_st);
+        gG.edgesDist(edges, gG, geo_st, lig_st, sizes);
         createGraphGroup();
     }
 
@@ -364,7 +346,7 @@ public class Controller {
         gG = null;
 
         gG = new CriacaoGrafo(sizes, geo_st, lig_st);
-        edges = gG.create_arraysLig(sizes, lig_st);
+        edges = gG.create_arraysLig(sizes, geo_st, lig_st);
         gG.edgesTemp(edges, gG, lig_st, sizes);
         createGraphGroup();
     }
@@ -377,8 +359,8 @@ public class Controller {
         gG = null;
 
         gG = new CriacaoGrafo(sizes, geo_st, lig_st);
-        edges = gG.create_arraysLig(sizes, lig_st);
-        gG.edgesDist(edges, gG, lig_st, sizes);
+        edges = gG.create_arraysLig(sizes, geo_st, lig_st);
+        gG.edgesDist(edges, gG, geo_st, lig_st, sizes);
         createGraphGroup();
 
         createTables();
@@ -605,77 +587,115 @@ public class Controller {
 
     public void userAdd(ActionEvent actionEvent) {
         User user = new User();
-        int id = Integer.parseInt(userIdField.getText());
-        if (!user_st.contains(id)) {
-            sizes[0]++;
-            user.id = Integer.parseInt(userIdField.getText());
-            user.nome = userNomeField.getText();
-            if (userTipoField.getText().equals("premium") || userTipoField.getText().equals("basic") || userTipoField.getText().equals("admin")) {
-                user.tipo = userTipoField.getText();
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Tipo Nao Existe", ButtonType.CLOSE);
-                alert.showAndWait();
-                return;
-            }
-            user_st.put(id, user);
-        } else {
-            if ((user_st.contains(id) && user_st.get(id).nome.equals(userNomeField.getText()) && user_st.get(id).tipo.equals(userTipoField.getText()))) {
-                Alert alert = new Alert(Alert.AlertType.WARNING, "User Ja Existe", ButtonType.OK);
-                alert.showAndWait();
-                return;
-            } else {
-                System.out.println(user_st.get(id).id + " " + user_st.get(id).nome + " " + user_st.get(id).tipo);
-                user_st.get(id).nome = userNomeField.getText();
-                if (userTipoField.getText().equals("premium") || userTipoField.getText().equals("basic") || userTipoField.getText().equals("admin")) {
-                    user_st.get(id).tipo = userTipoField.getText();
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "Tipo Nao Existe", ButtonType.CLOSE);
+        int id = 0; String nome = "0",tipo = "0";
+
+        if(!userIdField.getText().equals("")){
+            id = Integer.parseInt(userIdField.getText());
+            if(!userNomeField.getText().equals("") && !userTipoField.getText().equals("")){
+                if(user_st.contains(id)){
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "O User ja existe!", ButtonType.OK);
+                    alert.showAndWait();
+                    return;
+                }else{
+                    tipo = userTipoField.getText();
+                    if(tipo.equals("basic") || tipo.equals("premium") || tipo.equals("admin")){
+                        nome = userNomeField.getText();
+                        user.addUser(id,nome,tipo,sizes,user_st);
+                        createTables();
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.WARNING, "O Tipo não existe!", ButtonType.OK);
+                        alert.showAndWait();
+                        return;
+                    }
+                }
+            }else if(!userNomeField.getText().equals("") && userTipoField.getText().equals("")){
+                if(user_st.contains(id)){
+                    nome = userNomeField.getText();
+                    user.editUser("nome",nome,id,user_st);
+                    createTables();
+                }else{
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "O User não existe!", ButtonType.OK);
+                    alert.showAndWait();
+                    return;
+                }
+            }else if(userNomeField.getText().equals("") && !userTipoField.getText().equals("")){
+                if(user_st.contains(id)){
+                    tipo = userTipoField.getText();
+                    if(tipo.equals("basic") || tipo.equals("premium") || tipo.equals("admin")){
+                        user.editUser("tipo",tipo,id,user_st);
+                        createTables();
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.WARNING, "O Tipo não existe!", ButtonType.OK);
+                        alert.showAndWait();
+                        return;
+                    }
+                }else{
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "O User não existe!", ButtonType.OK);
                     alert.showAndWait();
                     return;
                 }
             }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "User Alterado", ButtonType.OK);
+        }else{
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Escreva o ID que pretende adicionar!", ButtonType.OK);
             alert.showAndWait();
+            return;
         }
-        userNomeField.setText("");
-        userTipoField.setText("");
-        userIdField.setText("");
-        createTables();
     }
 
     public void userRemove(ActionEvent actionEvent) {
+        User u = new User();
+        if(!userIdField.getText().equals("")){
+            int id = Integer.parseInt(userIdField.getText());
+            u.removeUser(id,sizes,user_st);
+            createTables();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Escreva o ID que pretende remover!", ButtonType.OK);
+            alert.showAndWait();
+            return;
+        }
     }
 
     public void addReg(ActionEvent actionEvent) {
         Regiao reg = new Regiao();
-        int id = Integer.parseInt(regIdField.getText());
-        if (!reg_st.contains(id)) {
-            sizes[1]++;
-            reg.id = Integer.parseInt(regIdField.getText());
-            reg.nome = regNomeField.getText();
-            reg.n_caches = 0;
+        int id = 0; String nome = "0";
 
-
-        } else {
-            if ((reg_st.contains(id) && reg_st.get(id).nome.equals(regNomeField.getText()))) {
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Regiao Ja Existe", ButtonType.OK);
-                alert.showAndWait();
-                return;
-            } else {
-                reg_st.get(id).nome = regNomeField.getText();
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Regiao Alterado", ButtonType.CLOSE);
-                alert.showAndWait();
-                return;
+        if(!regIdField.getText().equals("")){
+            id = Integer.parseInt(regIdField.getText());
+            if(!regNomeField.getText().equals("")){
+                if(reg_st.contains(id)){
+                    nome = regNomeField.getText();
+                    reg.editRegiao("nome",nome,id,reg_st);
+                    createTables();
+                }else{
+                        nome = regNomeField.getText();
+                        reg.addRegiao(id,nome,sizes,reg_st);
+                        createTables();
+                }
             }
+        }else{
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Escreva o ID que pretende adicionar!", ButtonType.OK);
+            alert.showAndWait();
+            return;
         }
-        reg_st.put(id, reg);
-        regIdField.setText("");
-        regNomeField.setText("");
-
-        createTables();
     }
 
     public void removeReg(ActionEvent actionEvent) {
+        Regiao r = new Regiao();
+        if(!regIdField.getText().equals("")){
+            int id = Integer.parseInt(regIdField.getText());
+            r.removeRegiao(id,sizes,reg_st,geo_st,item_st,lig_st,hisV_st);
+
+            gG = new CriacaoGrafo(sizes, geo_st, lig_st);
+            edges = gG.create_arraysLig(sizes, geo_st, lig_st);
+            gG.edgesDist(edges, gG, geo_st, lig_st, sizes);
+            createGraphGroup();
+
+            createTables();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Escreva o ID que pretende remover!", ButtonType.OK);
+            alert.showAndWait();
+            return;
+        }
     }
 
     public void addGeocache(ActionEvent actionEvent) {
@@ -688,8 +708,9 @@ public class Controller {
         geo.addGeocache(id,tipo,cX,cY,id_reg,sizes,geo_st,reg_st);
 
         gG = new CriacaoGrafo(sizes, geo_st, lig_st);
-        edges = gG.create_arraysLig(sizes, lig_st);
-        gG.edgesDist(edges, gG, lig_st, sizes);
+        edges = gG.create_arraysLig(sizes, geo_st, lig_st);
+        gG.edgesDist(edges, gG, geo_st, lig_st, sizes);
         createGraphGroup();
+        createTables();
     }
 }

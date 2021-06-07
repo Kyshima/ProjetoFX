@@ -120,7 +120,7 @@ public class Geocache {
      * @param reg   - ST das Regioes
      * @param item  - ST dos Itens
      */
-    public void removeGeocache(String id, int[] sizes, SequentialSearchST<Integer, Geocache> geo, SequentialSearchST<Integer, Regiao> reg, SequentialSearchST<Integer, Item> item, RedBlackBST<Integer, HistoricoVisited> hisV_st) {
+    public void removeGeocache(String id, int[] sizes, SequentialSearchST<Integer, Geocache> geo, SequentialSearchST<Integer, Regiao> reg, SequentialSearchST<Integer, Item> item, SequentialSearchST<Integer,Ligacoes> lig, RedBlackBST<Integer, HistoricoVisited> hisV_st) {
         int idgeo = Integer.parseInt(id.replace("geocache", ""));
 
         if (geo.contains(idgeo)) {
@@ -161,6 +161,16 @@ public class Geocache {
                         hisV_st.get(i).visited[k] = save[l];
                     }
                 }
+            }
+
+            //Remove Ligacoes
+            int sl = sizes[5];
+            for(int j = 0; j < sl; j++){
+                if(lig.get(j) != null){
+                    if(lig.get(j).getId_1().equals(id) || lig.get(j).getId_2().equals(id)){
+                        lig.get(j).removeLigacao(lig.get(j).id_1,lig.get(j).id_2,sizes,lig);
+                    }
+                } else sl++;
             }
 
             // Decrescer 1 das caches

@@ -144,47 +144,65 @@ public class CriacaoGrafo extends EdgeWeightedGraph {
         return new int[]{x, y};
         }
 
-    public int[][] create_arraysLig(int[] sizes, SequentialSearchST<Integer, Ligacoes> lig){
+    public int[][] create_arraysLig(int[] sizes, SequentialSearchST<Integer, Geocache> geo, SequentialSearchST<Integer, Ligacoes> lig){
         int sl = sizes[5];
         int pos = 0;
-        ligs = new int[sizes[2]][10];
-        for(int g = 1; g <= sizes[2]; g++){
-            for(int l = 1; l < sl; l++){
-                if(lig.get(l) != null && Integer.parseInt(lig.get(l).id_1.replace("geocache","")) == g){
-                    ligs[g-1][pos] = Integer.parseInt(lig.get(l).id_2.replace("geocache",""));
-                    pos++;
-                }
-//                else {sl --;}
-            }
-            pos = 0;
-            sl = sizes[5];
+        int ligss = sizes[2];
+        for (int i = 0; i < ligss; i++) {
+            if(geo.get(i) == null) ligss++;
         }
-
+        ligs = new int[ligss][10];
+        int sg = sizes[2];
+        for(int g = 1; g <= sg; g++) {
+            if (geo.get(g) != null) {
+                for (int l = 1; l < sl; l++) {
+                    if (lig.get(l) != null) {
+                        if (Integer.parseInt(lig.get(l).id_1.replace("geocache", "")) == g) {
+                            ligs[g - 1][pos] = Integer.parseInt(lig.get(l).id_2.replace("geocache", ""));
+                            pos++;
+                        }
+                    } else {
+                        sl++;
+                    }
+                }
+                pos = 0;
+                sl = sizes[5];
+            }else sg++;
+        }
         return ligs;
     }
 
-    public void edgesDist(int[][] ligs, CriacaoGrafo gG, SequentialSearchST<Integer, Ligacoes> lig, int[] sizes){
+    public void edgesDist(int[][] ligs, CriacaoGrafo gG, SequentialSearchST<Integer, Geocache> geo_st, SequentialSearchST<Integer, Ligacoes> lig_st, int[] sizes){
         float max_d = 0.0f;
-        for(int r = 1; r < sizes[5]; r++){
-            if(lig.get(r) != null && lig.get(r).distancia > max_d) max_d = lig.get(r).distancia;
+        int rs = sizes[5];
+        for(int r = 1; r < rs; r++){
+            if(lig_st.get(r) != null) {
+                if (lig_st.get(r).distancia > max_d) max_d = lig_st.get(r).distancia;
+            } else rs++;
         }
 
         int k;
         // g percorre 18 geocaches
-        for(int g = 0; g < sizes[2]; g++){
-            // percorre enquanto existir informaçao
-            for (int s = 0; ligs[g][s] != 0; s++){
+        int sg = sizes[2];
+        for(int g = 0; g < sg; g++) {
+            if (geo_st.get(g + 1) != null) {
+                // percorre enquanto existir informaçao
+                for (int s = 0; ligs[g][s] != 0; s++) {
                     // de 1 a 50
-                    for(k = 1; k < sizes[5]; k++) {
-                        if ((Integer.parseInt(lig.get(k).id_1.replace("geocache", "")) == g + 1) && (Integer.parseInt(lig.get(k).id_2.replace("geocache", "")) == ligs[g][s]))
-                            break;
+                    int sk = sizes[5];
+                    for (k = 1; k < sk; k++) {
+                        if (lig_st.get(k) != null) {
+                            if ((Integer.parseInt(lig_st.get(k).id_1.replace("geocache", "")) == g + 1) && (Integer.parseInt(lig_st.get(k).id_2.replace("geocache", "")) == ligs[g][s]))
+                                break;
+                        } else sk++;
                     }
-                    float d = lig.get(k).distancia;
+                    float d = lig_st.get(k).distancia;
                     d = ((d * 3) / (max_d) + 0.4f);
 
-                    Edge e = new Edge(g, ligs[g][s]-1,d);
+                    Edge e = new Edge(g, ligs[g][s] - 1, d);
                     gG.addEdge(e);
-            }
+                }
+            } else sg++;
         }
     }
 
