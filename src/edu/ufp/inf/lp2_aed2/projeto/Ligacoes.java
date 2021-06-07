@@ -72,11 +72,14 @@ public class Ligacoes {
    * @param lig_st - St das Ligacoes
    */
   public void addLigacao(String id_1, String id_2, float distancia, int tempo, int[] sizes, SequentialSearchST<Integer,Ligacoes> lig_st) {
-    for(int i = 1; i <= sizes[5]; i++){
-      if(lig_st.get(i).id_1.equals(id_1) && lig_st.get(i).id_2.equals(id_2)){
+    int si = sizes[5];
+    for(int i = 1; i <= si; i++){
+      if(lig_st.get(i) != null){
+      if(lig_st.get(i).id_1.equals(id_1) && lig_st.get(i).id_2.equals(id_2)) {
         System.out.println("Erro na Inserção da LIGAÇÃO:\tOs IDs " + id_1 + " e " + id_2 + " já existem!");
         return;
-      }
+        }
+      }else si++;
     }
     sizes[5]++;
     Ligacoes ligacao = new Ligacoes(id_1, id_2, distancia, tempo);
@@ -92,7 +95,8 @@ public class Ligacoes {
    * @param lig_st - St das Ligacoes
    */
   public void removeLigacao(String id_1, String id_2,int[] sizes, SequentialSearchST<Integer,Ligacoes> lig_st) {
-    for(int i = 1; i <= sizes[5]; i++) {
+    int s = sizes[5];
+    for(int i = 1; i <= s; i++) {
       if (lig_st.get(i) != null) {
         if (lig_st.get(i).id_1.equals(id_1) && lig_st.get(i).id_2.equals(id_2)) {
           lig_st.delete(i);
@@ -100,7 +104,7 @@ public class Ligacoes {
           sizes[5]--;
           return;
         }
-      }
+      }else s++;
     }
     System.out.println("Erro na Remoção da Ligação:\tA Ligação entre " + id_1 + " e " + id_2 + " não existe!");
   }
@@ -118,18 +122,22 @@ public class Ligacoes {
         case "id1": {
           lig_st.get(id).id_1 = conteudo;
           System.out.println("Ligação " + id + " editada com sucesso! -> " + lig_st.get(id));
+          break;
         }
         case "id2": {
           lig_st.get(id).id_2 = conteudo;
           System.out.println("Ligação " + id + " editada com sucesso! -> " + lig_st.get(id));
+          break;
         }
         case "distancia": {
           lig_st.get(id).distancia = Float.parseFloat(conteudo);
           System.out.println("Ligação " + id + " editada com sucesso! -> " + lig_st.get(id));
+          break;
         }
         case "tempo": {
           lig_st.get(id).tempo = Integer.parseInt(conteudo);
           System.out.println("Ligação " + id + " editada com sucesso! -> " + lig_st.get(id));
+          break;
         }
         default: System.out.println("Tipo introduzido invalido na ediçao da Ligação");
       }

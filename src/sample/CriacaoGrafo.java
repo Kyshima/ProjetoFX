@@ -162,7 +162,7 @@ public class CriacaoGrafo extends EdgeWeightedDigraph {
         int sg = sizes[2];
         for(int g = 1; g <= sg; g++) {
             if (geo.get(g) != null) {
-                for (int l = 1; l < sl; l++) {
+                for (int l = 1; l <= sl; l++) {
                     if (lig.get(l) != null) {
                         if (Integer.parseInt(lig.get(l).id_1.replace("geocache", "")) == g) {
                             ligs[g - 1][pos] = Integer.parseInt(lig.get(l).id_2.replace("geocache", ""));
@@ -186,7 +186,7 @@ public class CriacaoGrafo extends EdgeWeightedDigraph {
     public void edgesDist(int[][] ligs, CriacaoGrafo gG, SequentialSearchST<Integer, Geocache> geo_st, SequentialSearchST<Integer, Ligacoes> lig_st, int[] sizes){
         float max_d = 0.0f;
         int rs = sizes[5];
-        for(int r = 1; r < rs; r++){
+        for(int r = 1; r <= rs; r++){
             if(lig_st.get(r) != null) {
                 if (lig_st.get(r).distancia > max_d) max_d = lig_st.get(r).distancia;
             } else rs++;
@@ -208,7 +208,7 @@ public class CriacaoGrafo extends EdgeWeightedDigraph {
                                 gG.addEdge(e);
                                 break;
                             }
-                        } else sl++;
+                        }else sl++;
                     }
                 }
             } else {
@@ -218,26 +218,37 @@ public class CriacaoGrafo extends EdgeWeightedDigraph {
         }
     }
 
-    public void edgesTemp(int[][] ligs, CriacaoGrafo gG, SequentialSearchST<Integer, Ligacoes> lig, int[] sizes){
-        float max_t = 0.0f;
-        for(int r = 1; r < sizes[5]; r++){
-            if(lig.get(r) != null && lig.get(r).tempo > max_t) max_t = lig.get(r).tempo;
+    public void edgesTemp(int[][] ligs, CriacaoGrafo gG, SequentialSearchST<Integer, Geocache> geo_st, SequentialSearchST<Integer, Ligacoes> lig_st, int[] sizes){
+        float max_d = 0.0f;
+        int rs = sizes[5];
+        for(int r = 1; r <= rs; r++){
+            if(lig_st.get(r) != null) {
+                if (lig_st.get(r).tempo > max_d) max_d = lig_st.get(r).tempo;
+            } else rs++;
         }
 
-        int k;
-        // g percorre 18 geocaches
-        for(int g = 0; g < sizes[2]; g++){
-            // percorre enquanto existir informaçao
-            for (int s = 0; ligs[g][s] != 0; s++){
-                for(k = 1; k < sizes[5]; k++) {
-                    if ((Integer.parseInt(lig.get(k).id_1.replace("geocache", "")) == g + 1) && (Integer.parseInt(lig.get(k).id_2.replace("geocache", "")) == ligs[g][s]))
-                        break;
-                }
-                float t = lig.get(k).tempo;
-                t = ((t * 3) / (max_t) + 0.4f);
+        int sg = sizes[2];
+        for(int g = 1,gn = 1; g <= sg; g++,gn++) {            // Percorre as geocaches
+            if (geo_st.get(g) != null) {
+                for (int s = 0; ligs[g - 1][s] != 0; s++) {             // Percorre array ligaçoes g(0-17) e s!=0 contem o nr da geocache
+                    int sl = sizes[5];
+                    for (int l = 0; l < sl; l++) {
+                        if (lig_st.get(l) != null) {
+                            if ((Integer.parseInt(lig_st.get(l).id_1.replace("geocache", "")) == (g)) && ((ligs[g - 1][s] - 1) == (Integer.parseInt(lig_st.get(l).id_2.replace("geocache", "")) - 1))) {
+                                int sub = g - gn + 1;
+                                float d = lig_st.get(l).tempo;
+                                d = ((d * 3) / (max_d) + 0.4f);                 // 3 para max da linha e 0.4 para minimo
 
-                Edge e = new Edge(g, ligs[g][s]-1,t);
-                //gG.addEdge(e);
+                                DirectedEdge e = new DirectedEdge((Integer.parseInt(lig_st.get(l).id_1.replace("geocache", "")) - sub), (Integer.parseInt(lig_st.get(l).id_2.replace("geocache", "")) - sub), d);
+                                gG.addEdge(e);
+                                break;
+                            }
+                        } else sl++;
+                    }
+                }
+            } else {
+                sg++;
+                gn--;
             }
         }
     }

@@ -29,8 +29,8 @@ import javafx.scene.control.TablePosition;
 public class Controller {
     public Group graphGroup;
 
-    public TextField id1;
-    public TextField id2;
+    public TextField id1LigAdd;
+    public TextField id2LigAdd;
     public TextField distField;
     public TextField tempoField;
 
@@ -265,76 +265,94 @@ public class Controller {
     }
 
     public void handleButtonAdd(javafx.event.ActionEvent actionEvent) {
-        try {
-            int flag = 1;
-            int t = -1;
-            int s = Integer.parseInt(id1.getText().replace("geocache", ""));
-            String u = id2.getText();
-            if (!u.equals("")) t = Integer.parseInt(u.replace("geocache", ""));
+        if(id1LigAdd.getText().contains("geocache") && id2LigAdd.getText().contains("geocache")){
+            String id1 = id1LigAdd.getText();
+            String id2 = id2LigAdd.getText();
 
-            //System.out.println(u + " " + s);
-            int existe1 = 0;
+                if(!distField.getText().equals("") && !tempoField.getText().equals("")){
+                    float dist = Float.parseFloat(distField.getText());
+                    int temp = Integer.parseInt(tempoField.getText());
 
-            int[][] lig = gG.getLigs();
+                    Ligacoes l = new Ligacoes();
+                    l.addLigacao(id1,id2,dist,temp,sizes,lig_st);
+                    System.out.println("1");
 
-            if (t != -1) {           // Linhas
-                for (int p = 1; p < sizes[2]; p++) {            // percorre as geocaches
-                    if (p == s) {                               // quando acha a 1 geocache inserida
-                        if (geo_st.contains(t)) {
-                            for (int l = 0; lig[p][l] != 0; l++) {      //percorre array ligacoes
-                                if (lig[p][l] == t) {
-                                    existe1++;
-                                }
-                            }
-                            if (existe1 == 0) {
-                                /*String[] lines = details.getText().split(";");
-                                int tempo = Integer.parseInt(lines[0]);
-                                float distancia = Float.parseFloat(lines[1]);*/
-                                int tempo = Integer.parseInt(tempoField.getText());
-                                float distancia = Float.parseFloat(distField.getText());
+                    graphGroup.getChildren().clear();
+                    gG = null;
 
-                                Ligacoes n_lig = new Ligacoes();
-                                sizes[5]++;
-
-                                n_lig.id_1 = id1.getText();
-                                n_lig.id_2 = id2.getText();
-                                n_lig.tempo = tempo;
-                                n_lig.distancia = distancia;
-
-                                lig_st.put(sizes[5] - 1, n_lig);
-
-                                flag = 3;
-
-                                break;
-                            }
-
-                        }
-                    }
+                    gG = new CriacaoGrafo(sizes, geo_st, lig_st);
+                    int[][] array = gG.create_arraysLig(sizes, geo_st, lig_st);
+                    gG.edgesDist(array, gG, geo_st, lig_st, sizes);
+                    createGraphGroup();
                 }
-                graphGroup.getChildren().clear();
-                gG = null;
-                gG = new CriacaoGrafo(sizes, geo_st, lig_st);
-                int[][] array = gG.create_arraysLig(sizes, geo_st, lig_st);
-                gG.edgesDist(array, gG, geo_st, lig_st, sizes);
-                createGraphGroup();
-
-            }
-            if (flag == 3) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Edge Adicionada", ButtonType.CLOSE);
-                alert.showAndWait();
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Vertice nao Existe", ButtonType.CLOSE);
-                alert.showAndWait();
-            }
-        } catch (NumberFormatException e) {
-            System.out.println(e);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Escreva nos IDS 'geocacheN'!", ButtonType.CLOSE);
+            alert.showAndWait();
+            return;
         }
     }
 
     public void handleButtonEdit(ActionEvent actionEvent) {
+        if(id1LigAdd.getText().contains("geocache") && id2LigAdd.getText().contains("geocache")){
+            String id1 = id1LigAdd.getText();
+            String id2 = id2LigAdd.getText();
+            int i;
+            int si = sizes[5];
+            for(i = 1; i <= si; i++){
+                if(lig_st.get(i) != null){
+                    if(lig_st.get(i).id_1.equals(id1) && lig_st.get(i).id_2.equals(id2)) break;
+                } else si++;
+            }
+
+            if(!distField.getText().equals("") && !tempoField.getText().equals("")){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Escolha o que alterar!", ButtonType.CLOSE);
+                alert.showAndWait();
+                return;
+            } else if(!distField.getText().equals("") && tempoField.getText().equals("")){
+                String dist = distField.getText();
+                Ligacoes l = new Ligacoes();
+                l.editLigacao("distancia",dist,i,lig_st);
+            } else if(!tempoField.getText().equals("") && distField.getText().equals("")){
+                String tempo = tempoField.getText();
+                Ligacoes l = new Ligacoes();
+                l.editLigacao("tempo",tempo,i,lig_st);
+            }
+
+            graphGroup.getChildren().clear();
+            gG = null;
+
+            gG = new CriacaoGrafo(sizes, geo_st, lig_st);
+            int[][] array = gG.create_arraysLig(sizes, geo_st, lig_st);
+            gG.edgesDist(array, gG, geo_st, lig_st, sizes);
+            createGraphGroup();
+
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Escreva nos IDS 'geocacheN'!", ButtonType.CLOSE);
+            alert.showAndWait();
+            return;
+        }
     }
 
     public void handleButtonRemove(ActionEvent actionEvent) {
+        if(id1LigAdd.getText().contains("geocache") && id2LigAdd.getText().contains("geocache")){
+            String id1 = id1LigAdd.getText();
+            String id2 = id2LigAdd.getText();
+
+            Ligacoes l = new Ligacoes();
+            l.removeLigacao(id1,id2,sizes,lig_st);
+
+            graphGroup.getChildren().clear();
+            gG = null;
+
+            gG = new CriacaoGrafo(sizes, geo_st, lig_st);
+            int[][] array = gG.create_arraysLig(sizes, geo_st, lig_st);
+            gG.edgesDist(array, gG, geo_st, lig_st, sizes);
+            createGraphGroup();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Escreva nos IDS 'geocacheN'!", ButtonType.CLOSE);
+            alert.showAndWait();
+            return;
+        }
     }
 
     public void createDist(ActionEvent actionEvent) {
@@ -353,7 +371,7 @@ public class Controller {
 
         gG = new CriacaoGrafo(sizes, geo_st, lig_st);
         edges = gG.create_arraysLig(sizes, geo_st, lig_st);
-        gG.edgesTemp(edges, gG, lig_st, sizes);
+        gG.edgesTemp(edges, gG, geo_st, lig_st, sizes);
         createGraphGroup();
     }
 
@@ -397,55 +415,6 @@ public class Controller {
         nomeItensCol.setCellValueFactory(new PropertyValueFactory<>("item"));
         itemTable.setItems(itemOL());
 
-    }
-
-    public void addAndEditUser() {
-        userTable.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-            if (userTable.getEditingCell() == null) {
-                if (event.getCode().isLetterKey() || event.getCode().isDigitKey()) {
-                    System.out.print(input + "\t");
-                    input = input + event.getText();
-                    System.out.println(input);
-                }
-            }
-
-
-            if (event.getCode() == KeyCode.ENTER && !input.equals("")) {
-                //System.out.println(input);
-                //editPosUser();
-                System.out.println(input);
-            }
-            if (event.getCode() == KeyCode.HOME && input.equals("")) {
-                TablePosition pos = userTable.getFocusModel().getFocusedCell();
-
-                if (pos.getRow() == -1) {
-                    userTable.getSelectionModel().select(0);
-                } else if (pos.getRow() == userTable.getItems().size() - 1) {
-                    //addRowUser();
-                } else if (pos.getRow() < userTable.getItems().size() - 1) {
-                    userTable.getSelectionModel().clearAndSelect(pos.getRow() + 1, pos.getTableColumn());
-                }
-            }
-            if (event.getCode() == KeyCode.DELETE) {
-                TablePosition pos = userTable.getFocusModel().getFocusedCell();
-
-                if (pos.getRow() == -1) {
-                    userTable.getSelectionModel().select(0);
-                } else {
-                    removeSelectedRowsUser();
-                }
-            }
-        });
-
-        userTable.getSelectionModel().setCellSelectionEnabled(true);
-        userTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        userTable.getSelectionModel().selectFirst();
-
-    }
-
-    public void removeSelectedRowsUser() {
-        userTable.getItems().removeAll(userTable.getSelectionModel().getSelectedItems());
-        userTable.getSelectionModel().clearSelection();
     }
 
     public void lerFile() {
@@ -697,13 +666,11 @@ public class Controller {
             gG.edgesDist(edges, gG, geo_st, lig_st, sizes);
             createGraphGroup();
 
-
             createTables();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Escreva o ID que pretende remover!", ButtonType.OK);
             alert.showAndWait();
             return;
-
         }
     }
 
@@ -732,6 +699,36 @@ public class Controller {
             createGraphGroup();
             createTables();
         }
+    }
+
+    public void removeGeocache(ActionEvent actionEvent){
+        Geocache g = new Geocache();
+        if(!geoIdField.getText().equals("")){
+            if(geoIdField.getText().contains("geocache")){
+                String id = geoIdField.getText();
+                g.removeGeocache(id,sizes,geo_st,reg_st,item_st,lig_st,hisV_st);
+
+                gG = new CriacaoGrafo(sizes, geo_st, lig_st);
+                edges = gG.create_arraysLig(sizes, geo_st, lig_st);
+                gG.edgesDist(edges, gG, geo_st, lig_st, sizes);
+                createGraphGroup();
+
+                createTables();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Escreva o ID que pretende remover!", ButtonType.OK);
+            alert.showAndWait();
+            return;
+
+        }
+    }
+
+    public void itemAdd(ActionEvent actionEvent) {
+
+    }
+
+    public void itemRemove(ActionEvent actionEvent) {
+
     }
 
     public void saveTxt(ActionEvent actionEvent) {
@@ -825,7 +822,6 @@ public class Controller {
         logs_out.close();
     }
 
-
     public static boolean geoContainsItem(int id_item, String id_geo, SequentialSearchST<Integer, Item> itens) {
         if (itens.contains(id_item)) {
             return (itens.get(id_item).id_geo.equals(id_geo));
@@ -833,14 +829,6 @@ public class Controller {
         return false;
     }
 
-    /**
-     * Verifica se uma regiao contem a geocache
-     *
-     * @param id_geo - Id da Geocache
-     * @param regiao - Id da Regiao
-     * @param geo    - ST das Geocaches
-     * @return - Verdadeiro se contem, falso se nao contem
-     */
     public static boolean regContainsCache(String id_geo, int regiao, SequentialSearchST<Integer, Geocache> geo) {
         int n_geo = Integer.parseInt(id_geo.replace("geocache", ""));
         if (geo.contains(n_geo)) {
@@ -856,33 +844,25 @@ public class Controller {
             graphGroup.getChildren().clear();
 
            for(DirectedEdge e : path){
-               //System.out.println(e.from() + " " + e.to() + " " + e.weight());
                Line l = new Line(gG.getPositionsX(e.from()), gG.getPositionsY(e.from()), gG.getPositionsX(e.to()), gG.getPositionsY(e.to()));
 
-               l.setStyle("-fx-stroke: DARKGREEN" );
+               l.setStyle("-fx-stroke: SKYBLUE" );
                graphGroup.getChildren().add(l);
-           }
-        for (int i = 0; i < gG.V(); i++) {
-                Circle c = new Circle(gG.getPositionsX(i), gG.getPositionsY(i), radius, Color.LIGHTBLUE);
-                Text id = new Text(" " + (i + 1));
-                if (geo_st.get(i + 1) != null) {
-                    if (geo_st.get(i + 1).id_reg == 1) {
-                        c.setFill(Color.web("FF5959"));
-                    } else if (geo_st.get(i + 1).id_reg == 2) {
-                        c.setFill(Color.web("#FACF5A"));
-                    } else if (geo_st.get(i + 1).id_reg == 3) {
-                        c.setFill(Color.web("#49BEB7"));
-                    } else {
-                        c.setFill(Color.web("085F63"));
-                    }
 
-                StackPane sp = new StackPane();
-                sp.setLayoutX(gG.getPositionsX(i) - radius);
-                sp.setLayoutY(gG.getPositionsY(i) - radius);
-                sp.getChildren().addAll(c, id);
-                graphGroup.getChildren().add(sp);
-            }
-        }
+               Circle c = new Circle(gG.getPositionsX(e.from()), gG.getPositionsY(e.from()), radius, Color.LIGHTPINK);
+               Text id = new Text(" " + (e.from() + 1));
+               Circle d = new Circle(gG.getPositionsX(e.to()), gG.getPositionsY(e.to()), radius, Color.LIGHTPINK);
+               Text id2 = new Text(" " + (e.to() + 1));
+               StackPane sp = new StackPane();
+               sp.setLayoutX(gG.getPositionsX(e.from()) - radius);
+               sp.setLayoutY(gG.getPositionsY(e.from()) - radius);
+               sp.getChildren().addAll(c, id);
+               StackPane sp2 = new StackPane();
+               sp2.setLayoutX(gG.getPositionsX(e.to()) - radius);
+               sp2.setLayoutY(gG.getPositionsY(e.to()) - radius);
+               sp2.getChildren().addAll(d, id2);
+               graphGroup.getChildren().addAll(sp,sp2);
+           }
     }
 }
 

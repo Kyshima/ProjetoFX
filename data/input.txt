@@ -60,7 +60,7 @@ geocache9, geocache12, 6.4, 71
 geocache10, geocache11, 4.7, 52
 geocache10, geocache12, 3.5, 36
 geocache10, geocache13, 6.2, 67
-geocache11, geocache12, 2.8, 32
+geocache11, geocache12, 2.8, 700
 geocache12, geocache13, 197, 2460
 geocache13, geocache14, 2.6, 31
 geocache13, geocache15, 4.5, 51

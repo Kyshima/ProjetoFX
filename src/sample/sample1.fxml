@@ -13,6 +13,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
@@ -48,23 +49,28 @@
                               <Button fx:id="buttonAdd" layoutY="376.0" mnemonicParsing="false" onAction="#handleButtonAdd" prefHeight="40.0" prefWidth="234.0" text="Add" />
                               <Button fx:id="buttonEdit" layoutX="233.0" layoutY="376.0" mnemonicParsing="false" onAction="#handleButtonEdit" prefHeight="40.0" prefWidth="233.3" text="Edit" />
                               <Button fx:id="buttonRemove" layoutX="467.0" layoutY="376.0" mnemonicParsing="false" onAction="#handleButtonRemove" prefHeight="40.0" prefWidth="233.3" text="Remove" />
-                              <Label layoutX="67.0" layoutY="33.0" text="ID1" />
-                              <Label layoutX="67.0" layoutY="97.0" text="ID2" />
-                              <Label layoutX="53.0" layoutY="160.0" text="Distancia" />
-                              <Label layoutX="58.0" layoutY="224.0" text="Tempo" />
-                              <TextField fx:id="id1" layoutX="115.0" layoutY="29.0" prefHeight="25.0" prefWidth="235.0" promptText="Ex: geocache10" />
-                              <TextField fx:id="id2" layoutX="115.0" layoutY="93.0" prefHeight="25.0" prefWidth="235.0" promptText="Ex: geocache10" />
-                              <TextField fx:id="distField" layoutX="115.0" layoutY="156.0" prefHeight="25.0" prefWidth="235.0" promptText="Ex: 2.4" />
-                              <TextField fx:id="tempoField" layoutX="115.0" layoutY="220.0" prefHeight="25.0" prefWidth="235.0" promptText="Ex: 60" />
-                              <Button fx:id="regButtonSwitch" layoutX="482.0" layoutY="24.0" mnemonicParsing="false" onAction="#createGraphGroup" prefHeight="35.0" prefWidth="131.0" text="Regioes" />
-                              <Button fx:id="basePremButton" layoutX="482.0" layoutY="88.0" mnemonicParsing="false" onAction="#createGraphGroup_PremBasic" prefHeight="35.0" prefWidth="131.0" text="Basic/Premium" />
-                              <Button fx:id="basicButton" layoutX="482.0" layoutY="151.0" mnemonicParsing="false" onAction="#createGraphGroup_Basic" prefHeight="35.0" prefWidth="131.0" text="Basic" />
-                              <Button fx:id="premButton" layoutX="482.0" layoutY="224.0" mnemonicParsing="false" onAction="#createGraphGroup_Prem" prefHeight="35.0" prefWidth="131.0" text="Premium" />
-                              <Button fx:id="shortestPathButton" layoutX="482.0" layoutY="286.0" mnemonicParsing="false" onAction="#shortestPath" prefHeight="35.0" prefWidth="131.0" text="Shortest Path" />
-                              <TextField fx:id="spField1" layoutX="115.0" layoutY="291.0" prefHeight="25.0" prefWidth="76.0" promptText="geocacheN" />
-                              <Label layoutX="67.0" layoutY="295.0" prefHeight="17.0" prefWidth="20.0" text="De" />
-                              <Label layoutX="224.0" layoutY="295.0" prefHeight="17.0" prefWidth="20.0" text="a" />
-                              <TextField fx:id="spField2" layoutX="266.0" layoutY="291.0" prefHeight="25.0" prefWidth="76.0" promptText="geocacheN" />
+                              <Label layoutX="44.0" layoutY="295.0" text="ID1" />
+                              <Label layoutX="44.0" layoutY="342.0" text="ID2" />
+                              <Label layoutX="341.0" layoutY="295.0" text="Distancia" />
+                              <Label layoutX="347.0" layoutY="342.0" text="Tempo" />
+                              <TextField fx:id="id1LigAdd" layoutX="77.0" layoutY="291.0" prefHeight="25.0" prefWidth="235.0" promptText="Ex: geocache10" />
+                              <TextField fx:id="id2LigAdd" layoutX="77.0" layoutY="338.0" prefHeight="25.0" prefWidth="235.0" promptText="Ex: geocache10" />
+                              <TextField fx:id="distField" layoutX="404.0" layoutY="291.0" prefHeight="25.0" prefWidth="235.0" promptText="Ex: 2.4" />
+                              <TextField fx:id="tempoField" layoutX="404.0" layoutY="338.0" prefHeight="25.0" prefWidth="235.0" promptText="Ex: 60" />
+                              <Button fx:id="regButtonSwitch" layoutX="178.0" layoutY="123.0" mnemonicParsing="false" onAction="#createGraphGroup" prefHeight="35.0" prefWidth="131.0" text="Regioes" />
+                              <Button fx:id="basePremButton" layoutX="418.0" layoutY="123.0" mnemonicParsing="false" onAction="#createGraphGroup_PremBasic" prefHeight="35.0" prefWidth="131.0" text="Basic/Premium" />
+                              <Button fx:id="basicButton" layoutX="178.0" layoutY="193.0" mnemonicParsing="false" onAction="#createGraphGroup_Basic" prefHeight="35.0" prefWidth="131.0" text="Basic" />
+                              <Button fx:id="premButton" layoutX="418.0" layoutY="187.0" mnemonicParsing="false" onAction="#createGraphGroup_Prem" prefHeight="35.0" prefWidth="131.0" text="Premium" />
+                              <Button fx:id="shortestPathButton" layoutX="483.0" layoutY="47.0" mnemonicParsing="false" onAction="#shortestPath" prefHeight="35.0" prefWidth="131.0" text="Shortest Path" />
+                              <TextField fx:id="spField1" layoutX="123.0" layoutY="52.0" prefHeight="25.0" prefWidth="110.0" promptText="geocache2" />
+                              <Label layoutX="67.0" layoutY="56.0" prefHeight="17.0" prefWidth="20.0" text="De" />
+                              <Label layoutX="274.0" layoutY="56.0" prefHeight="17.0" prefWidth="20.0" text="a" />
+                              <TextField fx:id="spField2" layoutX="322.0" layoutY="52.0" prefHeight="25.0" prefWidth="110.0" promptText="geocacheN" />
+                              <Label layoutX="45.0" layoutY="254.0" text="Ligações">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                              </Label>
                            </children></AnchorPane>
                     </content>
                   </Tab>
@@ -89,7 +95,7 @@
                                                 <TextField fx:id="userNomeField" layoutX="261.0" layoutY="353.0" promptText="Nome" />
                                                 <TextField fx:id="userTipoField" layoutX="487.0" layoutY="353.0" promptText="Tipo" />
                                                 <Button fx:id="userAddButton" layoutX="90.0" layoutY="386.0" mnemonicParsing="false" onAction="#userAdd" prefHeight="25.0" prefWidth="211.0" text="Add/Edit" />
-                                                <Button fx:id="removeAddButton" layoutX="382.0" layoutY="386.0" mnemonicParsing="false" onAction="#userRemove" prefHeight="25.0" prefWidth="211.0" text="Remove" />
+                                                <Button fx:id="removeUserButton" layoutX="382.0" layoutY="386.0" mnemonicParsing="false" onAction="#userRemove" prefHeight="25.0" prefWidth="211.0" text="Remove" />
                                              </children>
                                           </AnchorPane>
                                     </content>
@@ -133,6 +139,7 @@
                                                 <TextField fx:id="cYField" layoutX="337.0" layoutY="369.0" prefHeight="25.0" prefWidth="112.2" promptText="Coordenadas Y" />
                                                 <TextField fx:id="geoIdRegField" layoutX="450.0" layoutY="369.0" prefHeight="25.0" prefWidth="112.2" promptText="ID Regiao" />
                                                 <Button fx:id="addGeocacheButton" layoutX="88.0" layoutY="394.0" mnemonicParsing="false" onAction="#addGeocache" prefHeight="25.0" prefWidth="164.0" text="Add/Edit" />
+                                                <Button fx:id="removeGeocacheButton" layoutX="305.0" layoutY="394.0" mnemonicParsing="false" onAction="#removeGeocache" prefHeight="25.0" prefWidth="163.0" text="Remove" />
                                              </children>
 
                                           </AnchorPane>
@@ -142,16 +149,37 @@
                                       <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <TableView fx:id="itemTable" prefHeight="420.0" prefWidth="673.0">
+                                                <TableView fx:id="itemTable" prefHeight="346.0" prefWidth="673.0">
                                                    <columns>
                                                       <TableColumn fx:id="idItensCol" prefWidth="50.0" text="ID" />
                                                       <TableColumn fx:id="geoIdItensCol" prefWidth="120.0" text="ID Geocache" />
                                                       <TableColumn fx:id="nomeItensCol" prefWidth="120.0" text="Nome" />
                                                    </columns>
                                                 </TableView>
+                                                <TextField fx:id="itemIDField" layoutX="41.0" layoutY="353.0" promptText="ID" />
+                                                <TextField fx:id="itemIDGeoField" layoutX="261.0" layoutY="353.0" promptText="ID Geocache" />
+                                                <TextField fx:id="itemNomeField" layoutX="487.0" layoutY="353.0" promptText="Nome" />
+                                                <Button fx:id="itemAddButton" layoutX="90.0" layoutY="386.0" mnemonicParsing="false" onAction="#itemAdd" prefHeight="25.0" prefWidth="211.0" text="Add/Edit" />
+                                                <Button fx:id="removeItemButton" layoutX="382.0" layoutY="386.0" mnemonicParsing="false" onAction="#itemRemove" prefHeight="25.0" prefWidth="211.0" text="Remove" />
                                              </children>
                                           </AnchorPane>
                                       </content>
+                                    </Tab>
+                                    <Tab text="Logs">
+                                       <content>
+                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <TableView fx:id="logsTable" prefHeight="421.0" prefWidth="673.0">
+                                                   <columns>
+                                                      <TableColumn fx:id="idItensCol1" prefWidth="50.0" text="ID" />
+                                                      <TableColumn fx:id="geoIdItensCol1" prefWidth="91.0" text="User" />
+                                                      <TableColumn fx:id="nomeItensCol1" prefWidth="217.0" text="Geocaches Visitadas" />
+                                                      <TableColumn fx:id="nomeItensCol11" prefWidth="217.0" text="Data Visita" />
+                                                   </columns>
+                                                </TableView>
+                                             </children>
+                                          </AnchorPane>
+                                       </content>
                                     </Tab>
                                 </tabs>
                               </TabPane>
