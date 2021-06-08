@@ -171,10 +171,10 @@
                                              <children>
                                                 <TableView fx:id="logsTable" prefHeight="421.0" prefWidth="673.0">
                                                    <columns>
-                                                      <TableColumn fx:id="idItensCol1" prefWidth="50.0" text="ID" />
-                                                      <TableColumn fx:id="geoIdItensCol1" prefWidth="91.0" text="User" />
-                                                      <TableColumn fx:id="nomeItensCol1" prefWidth="217.0" text="Geocaches Visitadas" />
-                                                      <TableColumn fx:id="nomeItensCol11" prefWidth="217.0" text="Data Visita" />
+                                                      <TableColumn fx:id="idLogsCol" prefWidth="50.0" text="ID" />
+                                                      <TableColumn fx:id="userLogsCol" prefWidth="91.0" text="User" />
+                                                      <TableColumn fx:id="gvLogsCol" prefWidth="217.0" text="Geocaches Visitadas" />
+                                                      <TableColumn fx:id="dataLogsCol" prefWidth="217.0" text="Data Visita" />
                                                    </columns>
                                                 </TableView>
                                              </children>

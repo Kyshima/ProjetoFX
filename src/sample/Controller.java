@@ -57,14 +57,18 @@ public class Controller {
     public TableColumn<Item, String> geoIdItensCol;
     public TableColumn<Item, String> nomeItensCol;
 
+    public TableView<HistoricoVisited> logsTable;
+    public TableColumn<HistoricoVisited, String> idLogsCol;
+    public TableColumn<HistoricoVisited, String> userLogsCol;
+    public TableColumn<HistoricoVisited, String> gvLogsCol;
+    public TableColumn<HistoricoVisited, String> dataLogsCol;
+
     public int[][] edges;
-    public String input = "";
     public double radius = 15;
 
     public TextField userIdField;
     public TextField userNomeField;
     public TextField userTipoField;
-
     public TextField regIdField;
     public TextField regNomeField;
     public TextField geoIdField;
@@ -74,7 +78,9 @@ public class Controller {
     public TextField geoIdRegField;
     public TextField spField1;
     public TextField spField2;
-
+    public TextField itemIDField;
+    public TextField itemIDGeoField;
+    public TextField itemNomeField;
 
     int[] sizes = new int[8];
     protected static final int GROUP_MARGIN = 10;
@@ -119,7 +125,7 @@ public class Controller {
         }
     }
 
-    public void createGraphGroup_PremBasic() {           //Premium/Basic Butao
+    public void createGraphGroup_PremBasic(ActionEvent actionEvent) {           //Premium/Basic Butao
         createGraphGroupExtra(0);
 
         for (int i = 0; i < gG.V(); i++) {
@@ -129,7 +135,6 @@ public class Controller {
             if (geo_st.get(i + 1) != null && geo_st.get(i + 1).tipo.equals("premium")) {
                 c.setFill(Color.web("FF5959"));
             }
-
 
             StackPane sp = new StackPane();
             sp.setLayoutX(gG.getPositionsX(i) - radius);
@@ -260,6 +265,29 @@ public class Controller {
         return item;
     }
 
+    public ObservableList<HistoricoVisited> hVisitedOL() {
+        ObservableList<HistoricoVisited> v = FXCollections.observableArrayList();
+        int s = sizes[6];
+        for (int i = 1; i <= s; i++) {
+            if (hisV_st.get(i) != null) {
+                String a = "";
+                String b = "";
+                for(int j = 0; j < hisV_st.get(i).n_visited; j++){
+                    a = a + (hisV_st.get(i).visited[j]);
+                    b = b + (hisV_st.get(i).date[j]);
+                    if(j != hisV_st.get(i).n_visited - 1){
+                        a = a + " | ";
+                        b = b + " | ";
+                    }
+
+                }
+                HistoricoVisited n = new HistoricoVisited(i, hisV_st.get(i).user, hisV_st.get(i).n_visited, a.toString(), b.toString());
+                v.add(n);
+            } else s++;
+        }
+        return v;
+    }
+
     public double getRadius() {
         return radius;
     }
@@ -275,7 +303,6 @@ public class Controller {
 
                     Ligacoes l = new Ligacoes();
                     l.addLigacao(id1,id2,dist,temp,sizes,lig_st);
-                    System.out.println("1");
 
                     graphGroup.getChildren().clear();
                     gG = null;
@@ -395,7 +422,6 @@ public class Controller {
         nomeUserCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
         tipoUserCol.setCellValueFactory(new PropertyValueFactory<>("tipo"));
         userTable.setItems(userOL());
-        userTable.setEditable(true);
 
         idRegCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         nomeRegCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
@@ -415,6 +441,11 @@ public class Controller {
         nomeItensCol.setCellValueFactory(new PropertyValueFactory<>("item"));
         itemTable.setItems(itemOL());
 
+        idLogsCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        userLogsCol.setCellValueFactory(new PropertyValueFactory<>("user"));
+        gvLogsCol.setCellValueFactory(new PropertyValueFactory<>("visited_s"));
+        dataLogsCol.setCellValueFactory(new PropertyValueFactory<>("date_s"));
+        logsTable.setItems(hVisitedOL());
     }
 
     public void lerFile() {
@@ -523,6 +554,7 @@ public class Controller {
             for (int i = 1; i <= sizes[6]; i++) {
                 HistoricoVisited histV = new HistoricoVisited();
                 String[] data = scan.nextLine().split(", ");
+                histV.id = i;
                 histV.user = data[0];
                 histV.n_visited = Integer.parseInt(data[1]);
                 histV.visited = new int[histV.n_visited];
@@ -537,7 +569,6 @@ public class Controller {
                 for (int y = 0; y < histV.n_visited; y++) {
                     String[] aux = data1[y].split("/");
                     histV.date[y] = new Date(Integer.parseInt(aux[0]), Integer.parseInt(aux[1]), Integer.parseInt(aux[2]));
-                    //System.out.println(y + "   " + hist.date[y]);
                 }
                 hisV_st.put(i, histV);
             }
@@ -622,7 +653,7 @@ public class Controller {
         User u = new User();
         if (!userIdField.getText().equals("")) {
             int id = Integer.parseInt(userIdField.getText());
-            u.removeUser(id, sizes, user_st);
+            u.removeUser(id, sizes, user_st, hisV_st);
             createTables();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Escreva o ID que pretende remover!", ButtonType.OK);
@@ -724,11 +755,66 @@ public class Controller {
     }
 
     public void itemAdd(ActionEvent actionEvent) {
+        Item i = new Item();
+        if (!itemIDField.getText().equals("")) {
+            int id = Integer.parseInt(itemIDField.getText());
+            if (!itemNomeField.getText().equals("") && !itemIDGeoField.getText().equals("")) {
+                if (item_st.contains(id)) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "O Item ja existe!", ButtonType.OK);
+                    alert.showAndWait();
+                    return;
+                } else {
+                    String idgeo = itemIDGeoField.getText();
+                    String nome = itemNomeField.getText();
 
+                    i.addItem(id, idgeo, nome, sizes, item_st, geo_st);
+                    createTables();
+
+                }
+            } else if (!itemNomeField.getText().equals("") && itemIDGeoField.getText().equals("")) {
+                if (item_st.contains(id)) {
+                    String nome = itemNomeField.getText();
+                    i.editItem("item", nome, id, item_st);
+                    createTables();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "O Item não existe!", ButtonType.OK);
+                    alert.showAndWait();
+                    return;
+                }
+            }else if (itemNomeField.getText().equals("") && !itemIDGeoField.getText().equals("")){
+                if (item_st.contains(id)) {
+                    String idgeo = itemIDGeoField.getText();
+                    i.id = id;
+                    i.id_geo = idgeo;
+                    i.item = item_st.get(id).item;
+                    i.removeItem(id,sizes,item_st,geo_st);
+                    i.addItem(i.id,i.id_geo,i.item,sizes,item_st,geo_st);
+
+                    createTables();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "O Item não existe!", ButtonType.OK);
+                    alert.showAndWait();
+                    return;
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Escreva o ID que pretende adicionar!", ButtonType.OK);
+                alert.showAndWait();
+                return;
+            }
+        }
     }
 
     public void itemRemove(ActionEvent actionEvent) {
-
+        Item i = new Item();
+        if (!itemIDField.getText().equals("")) {
+            int id = Integer.parseInt(itemIDField.getText());
+            i.removeItem(id, sizes, item_st, geo_st);
+            createTables();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Escreva o ID que pretende remover!", ButtonType.OK);
+            alert.showAndWait();
+            return;
+        }
     }
 
     public void saveTxt(ActionEvent actionEvent) {

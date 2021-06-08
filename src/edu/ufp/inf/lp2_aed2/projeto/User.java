@@ -92,10 +92,22 @@ public class User {
      * @param sizes   - array com o numero total das variaveis (sendo a posicao 0 o numero de users)
      * @param user_st - ST dos users
      */
-    public void removeUser(int id, int[] sizes, SequentialSearchST<Integer, User> user_st) {
+    public void removeUser(int id, int[] sizes, SequentialSearchST<Integer, User> user_st, RedBlackBST<Integer,HistoricoVisited> hist_V) {
         if (user_st.contains(id)) {
+            int ss = sizes[6];
+            for(int i = 0; i < ss; i++){
+                if(hist_V.get(i) != null) {
+                    if (hist_V.get(i).user.equals(user_st.get(id).nome)) {
+                            hist_V.delete(i);
+                            sizes[6]--;
+                        break;
+                    }
+                }else ss++;
+            }
+
             user_st.delete(id);
             sizes[0]--;
+
             System.out.println("User " + id + " removido com sucesso!");
         } else {
             System.out.println("Erro na Remoção do USER:\tO ID " + id + " não existe!");
